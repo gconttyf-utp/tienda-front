@@ -1,0 +1,11 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "tienda-front-deploy",
+            "type": "shell",
+            "command": "mvn clean package wildfly:deploy",
+            "problemMatcher": []
+        }
+    ]
+}

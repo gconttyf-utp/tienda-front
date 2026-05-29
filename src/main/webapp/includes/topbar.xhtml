@@ -1,0 +1,20 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:jsf="jakarta.faces.passthrough"
+                xmlns:ui="jakarta.faces.facelets">
+    <div class="topbar">
+        <div class="container topbar__inner">
+            <ul class="topbar__promos">
+                <ui:repeat value="#{promosTop}" var="promo">
+                    <li>#{promo}</li>
+                </ui:repeat>
+            </ul>
+            <ul class="topbar__links">
+                <li><a href="#{request.contextPath}/ayuda.jsf">Ayuda</a></li>
+                <li><a href="#{request.contextPath}/tiendas.jsf">Tiendas</a></li>
+                <li><a href="#{request.contextPath}/login.xhtml">Admin</a></li>
+            </ul>
+        </div>
+    </div>
+</ui:composition>

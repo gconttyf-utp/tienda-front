@@ -1,0 +1,61 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:jsf="jakarta.faces.passthrough"
+                xmlns:ui="jakarta.faces.facelets">
+    <article class="product-card #{producto.agotado ? 'product-card--soldout' : ''}">
+        <div class="product-card__media" style="background: #{producto.colorPlaceholder};">
+            <ui:fragment rendered="#{producto.conDescuento and not producto.agotado}">
+                <span class="product-card__discount">-#{producto.descuento}%</span>
+            </ui:fragment>
+            <ui:fragment rendered="#{producto.oferta and not producto.agotado}">
+                <span class="product-card__badge">OFERTA</span>
+            </ui:fragment>
+            <ui:fragment rendered="#{producto.agotado}">
+                <span class="product-card__badge product-card__badge--soldout">AGOTADO</span>
+            </ui:fragment>
+            <ui:fragment rendered="#{not empty producto.imagen}">
+                <img src="#{producto.imagen}"
+                     alt="#{producto.nombre}"
+                     class="product-card__image"
+                     loading="lazy"/>
+            </ui:fragment>
+            <ui:fragment rendered="#{empty producto.imagen}">
+                <span class="product-card__placeholder">#{producto.marca}</span>
+            </ui:fragment>
+        </div>
+        <div class="product-card__body">
+            <span class="product-card__brand">#{producto.marca}</span>
+            <h3 class="product-card__name">#{producto.nombre}</h3>
+            <span class="product-card__unit">#{producto.unidad}</span>
+            <div class="product-card__prices">
+                <span class="product-card__price">
+                    S/ <h:outputText value="#{producto.precio}">
+                        <f:convertNumber pattern="#,##0.00"/>
+                    </h:outputText>
+                </span>
+                <ui:fragment rendered="#{producto.conDescuento}">
+                    <span class="product-card__price-old">
+                        S/ <h:outputText value="#{producto.precioAntes}">
+                            <f:convertNumber pattern="#,##0.00"/>
+                        </h:outputText>
+                    </span>
+                </ui:fragment>
+            </div>
+            <div class="product-card__stock #{producto.agotado ? 'product-card__stock--out' : (producto.stockBajo ? 'product-card__stock--low' : '')}">
+                <ui:fragment rendered="#{producto.agotado}">Sin stock</ui:fragment>
+                <ui:fragment rendered="#{not producto.agotado}">Stock: #{producto.stock}</ui:fragment>
+            </div>
+            <form method="POST"
+                  action="#{request.contextPath}/carrito/agregar"
+                  class="product-card__form">
+                <input type="hidden" name="productoId" value="#{producto.id}"/>
+                <button type="submit"
+                        disabled="#{producto.agotado ? 'disabled' : null}"
+                        class="btn btn--primary btn--block #{producto.agotado ? 'btn--disabled' : ''}">
+                    #{producto.agotado ? 'Agotado' : 'Agregar'}
+                </button>
+            </form>
+        </div>
+    </article>
+</ui:composition>

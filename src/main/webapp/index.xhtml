@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<ui:composition template="/templates/base.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:f="jakarta.faces.core">
+    
+    <ui:define name="title">#{titulo} - Tu mayorista online con ofertas todos los dias</ui:define>
+    
+    <ui:define name="content">
+        
+        
+
+
+
+
+
+        <!-- BLOQUE MASCOTAS -->
+        <section class="section cat-block cat-block--mascotas">
+            <div class="container">
+                <header class="section-title">
+                    <h2>Todo para tu mascota</h2>
+                    <a class="link-more" href="#{request.contextPath}/catalogo.jsf?dep=6">Ver todo</a>
+                </header>
+                <div class="product-grid">
+                    <ui:repeat value="#{homeBean.mascotas}" var="producto">
+                        <ui:include src="/product-card.xhtml">
+                            <ui:param name="producto" value="#{producto}"/>
+                        </ui:include>
+                    </ui:repeat>
+                </div>
+            </div>
+        </section>
+
+        <!-- BENEFICIOS -->
+        <section class="section benefits">
+            <div class="container">
+                <div class="benefits__grid">
+                    <ui:repeat value="#{beneficios}" var="b">
+                        <div class="benefit">
+                            <div class="benefit__icon benefit__icon--#{b.icono}">
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M12 2l3 7h7l-5.5 4.5 2 7.5L12 17l-6.5 4 2-7.5L2 9h7z"/>
+                                </svg>
+                            </div>
+                            <div class="benefit__text">
+                                <strong>#{b.titulo}</strong>
+                                <span>#{b.descripcion}</span>
+                            </div>
+                        </div>
+                    </ui:repeat>
+                </div>
+            </div>
+        </section>
+
+        <!-- NEWSLETTER -->
+        <section class="section newsletter">
+            <div class="container newsletter__box">
+                <div class="newsletter__text">
+                    <h2>Recibe nuestras mejores ofertas</h2>
+                    <p>Suscribete y te enviamos cupones exclusivos cada semana.</p>
+                </div>
+                <form class="newsletter__form" onsubmit="return false;">
+                    <input type="email" placeholder="Tu correo electronico" required="required"/>
+                    <button type="submit" class="btn btn--primary">Suscribirme</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- INSTITUCIONAL -->
+        <section class="section institucional">
+            <div class="container institucional__grid">
+                <a href="#{request.contextPath}/sobre-nosotros.jsf" class="inst-card">
+                    <h3>Sobre JakartaMarket</h3>
+                    <p>Somos tu mayorista de confianza. Calidad, precio y servicio.</p>
+                    <span class="link-more">Conocenos</span>
+                </a>
+                <a href="#{request.contextPath}/trabajo.jsf" class="inst-card inst-card--accent">
+                    <h3>Trabaja con nosotros</h3>
+                    <p>Unete al equipo que esta transformando el comercio mayorista en el Peru.</p>
+                    <span class="link-more">Ver vacantes</span>
+                </a>
+                <a href="#{request.contextPath}/ayuda.jsf" class="inst-card">
+                    <h3>Atencion al cliente</h3>
+                    <p>Estamos disponibles todos los dias. Cuentanos como podemos ayudarte.</p>
+                    <span class="link-more">Contactanos</span>
+                </a>
+            </div>
+        </section>
+
+    </ui:define>
+
+</ui:composition>
