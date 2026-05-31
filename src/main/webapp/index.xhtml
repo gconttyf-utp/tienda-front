@@ -2,8 +2,9 @@
 <ui:composition template="/templates/base.xhtml"
                 xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:h="jakarta.faces.html"
-                xmlns:ui="jakarta.faces.facelets"
-                xmlns:f="jakarta.faces.core">
+                xmlns:f="jakarta.faces.core"
+                xmlns:jsf="jakarta.faces.passthrough"
+                xmlns:ui="jakarta.faces.facelets">
     
     <ui:define name="title">#{titulo} - Tu mayorista online con ofertas todos los dias</ui:define>
     
@@ -13,7 +14,7 @@
         <section class="hero">
             <div class="container hero__grid">
                 <ui:repeat value="#{publicoBean.obtenerBanners()}" var="b">
-                    <div class="hero__main" style="background: #{b.colorFondo}; color: #{b.colorTexto};">
+                    <div class="hero__main" jsf:style="background: #{b.colorFondo}; color: #{b.colorTexto};">
                         <div class="hero__main-text">
                             <span class="hero__badge">#{b.badge}</span>
                             <h1>#{b.titulo}</h1>
