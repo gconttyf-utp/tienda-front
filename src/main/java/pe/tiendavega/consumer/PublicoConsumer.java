@@ -247,5 +247,66 @@ public class PublicoConsumer {
 
         }
     }
+
+    public List<ProductoDTO> obtenerOfertas() {
+        try (Client client = ClientBuilder.newClient()) {
+
+            WebTarget target = client.target(RutasConsumer.ENDPOINT_PUBLICO + "/ofertas");
+
+            Response response = target.request(MediaType.APPLICATION_JSON).get();
+
+            if (response.getStatus() == Response.Status.OK.getStatusCode()) {
+                
+                return response.readEntity(new GenericType<List<ProductoDTO>>() {});
+                
+            } else {
+                System.out.println("Error en la petición: " + response.getStatus());
+                return null;
+            }
+
+        }
+    }
+
+    public List<ProductoDTO> obtenerOfertasDepartamento(Integer codigo) {
+        try (Client client = ClientBuilder.newClient()) {
+
+            WebTarget target = client.target(RutasConsumer.ENDPOINT_PUBLICO + "/ofertadepartamento")
+                                    .queryParam("codigo", codigo);
+
+            Response response = target.request(MediaType.APPLICATION_JSON).get();
+
+            if (response.getStatus() == Response.Status.OK.getStatusCode()) {
+                
+                return response.readEntity(new GenericType<List<ProductoDTO>>() {});
+                
+            } else {
+                System.out.println("Error en la petición: " + response.getStatus());
+                return null;
+            }
+
+        }
+    }
+
+    public List<ProductoDTO> obtenerOfertasGrupo(Integer codigo) {
+        try (Client client = ClientBuilder.newClient()) {
+
+            WebTarget target = client.target(RutasConsumer.ENDPOINT_PUBLICO + "/ofertagrupos")
+                                    .queryParam("codigo", codigo)
+                                    .queryParam("oferta", 1)
+                                    .queryParam("oferta", 0);
+
+            Response response = target.request(MediaType.APPLICATION_JSON).get();
+
+            if (response.getStatus() == Response.Status.OK.getStatusCode()) {
+                
+                return response.readEntity(new GenericType<List<ProductoDTO>>() {});
+                
+            } else {
+                System.out.println("Error en la petición: " + response.getStatus());
+                return null;
+            }
+
+        }
+    }
     
 }

@@ -48,4 +48,10 @@ public class ProductoDTO {
 
     private LocalDateTime createdAt;
 
+    private Integer descuento;
+
+    private Boolean stockBajo;
+
+    private Boolean agotado;
+
 }

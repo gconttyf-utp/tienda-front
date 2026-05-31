@@ -5,38 +5,38 @@
                 xmlns:ui="jakarta.faces.facelets">
     <article class="product-card #{producto.agotado ? 'product-card--soldout' : ''}">
         <div class="product-card__media" style="background: #{producto.colorPlaceholder};">
-            <ui:fragment rendered="#{producto.conDescuento and not producto.agotado}">
+            <ui:fragment rendered="#{producto.descuento > 0 and not producto.agotado}">
                 <span class="product-card__discount">-#{producto.descuento}%</span>
             </ui:fragment>
-            <ui:fragment rendered="#{producto.oferta and not producto.agotado}">
+            <ui:fragment rendered="#{producto.oferta eq 1 and not producto.agotado}">
                 <span class="product-card__badge">OFERTA</span>
             </ui:fragment>
             <ui:fragment rendered="#{producto.agotado}">
                 <span class="product-card__badge product-card__badge--soldout">AGOTADO</span>
             </ui:fragment>
-            <ui:fragment rendered="#{not empty producto.imagen}">
-                <img src="#{producto.imagen}"
-                     alt="#{producto.nombre}"
+            <ui:fragment rendered="#{not empty producto.rutaImg}">
+                <img src="resources/images/productos/#{producto.rutaImg}"
+                     alt="#{producto.descripcion}"
                      class="product-card__image"
                      loading="lazy"/>
             </ui:fragment>
-            <ui:fragment rendered="#{empty producto.imagen}">
-                <span class="product-card__placeholder">#{producto.marca}</span>
+            <ui:fragment rendered="#{empty producto.rutaImg}">
+                <span class="product-card__placeholder">#{producto.sku}</span>
             </ui:fragment>
         </div>
         <div class="product-card__body">
-            <span class="product-card__brand">#{producto.marca}</span>
-            <h3 class="product-card__name">#{producto.nombre}</h3>
+            <span class="product-card__brand">#{producto.marcaID}</span>
+            <h3 class="product-card__name">#{producto.descripcion}</h3>
             <span class="product-card__unit">#{producto.unidad}</span>
             <div class="product-card__prices">
                 <span class="product-card__price">
-                    S/ <h:outputText value="#{producto.precio}">
+                    S/ <h:outputText value="#{producto.precioOnline}">
                         <f:convertNumber pattern="#,##0.00"/>
                     </h:outputText>
                 </span>
-                <ui:fragment rendered="#{producto.conDescuento}">
+                <ui:fragment rendered="#{producto.descuento > 0}">
                     <span class="product-card__price-old">
-                        S/ <h:outputText value="#{producto.precioAntes}">
+                        S/ <h:outputText value="#{producto.precioLista}">
                             <f:convertNumber pattern="#,##0.00"/>
                         </h:outputText>
                     </span>
