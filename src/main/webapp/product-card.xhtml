@@ -1,8 +1,9 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:h="jakarta.faces.html"
                 xmlns:f="jakarta.faces.core"
-                
+                xmlns:jsf="jakarta.faces.passthrough"
                 xmlns:ui="jakarta.faces.facelets">
+                
     <article class="product-card #{producto.agotado ? 'product-card--soldout' : ''}">
         <div class="product-card__media" style="background: #{producto.colorPlaceholder};">
             <ui:fragment rendered="#{producto.descuento > 0 and not producto.agotado}">

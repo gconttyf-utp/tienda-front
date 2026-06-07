@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<ui:composition template="/templates/base.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:jsf="jakarta.faces.passthrough"
+                xmlns:ui="jakarta.faces.facelets">
+
+    <f:metadata>
+        <f:viewParam name="dep" value="#{catalogoBean.departamentoSeleccionado}"/>
+        <f:viewParam name="grupo" value="#{catalogoBean.grupoSeleccionado}"/>
+        <f:viewParam name="q" value="#{catalogoBean.textoBusqueda}"/>
+        <f:viewParam name="ofertas" value="#{catalogoBean.soloOfertas}" converter="flexBooleanConverter"/>
+        <f:viewParam name="cat" value="#{catalogoBean.categoriaSeleccionada}"/>
+        <f:viewParam name="marca" value="#{catalogoBean.marcaSeleccionada}"/>
+        
+
+        <f:viewAction action="#{catalogoBean.cargarFiltros}"/>
+        <!--
+        <f:viewParam name="precioMin" value="#{catalogoBean.precioMin}"/>
+        <f:viewParam name="precioMax" value="#{catalogoBean.precioMax}"/>
+        -->
+    </f:metadata>
+    
+    <ui:define name="title">Catalogo - #{titulo}</ui:define>
+
+    <ui:define name="content">
+        <section class="section container">
+
+            <header class="page-header">
+                <nav class="breadcrumbs">
+                    <a href="#{request.contextPath}/">Inicio</a>
+                    <span>&#8250;</span>
+                    <a href="#{request.contextPath}/catalogo.jsf">Catalogo</a>
+                    <ui:fragment rendered="#{not empty catalogoBean.nombreDepartamento}">
+                        <span>&#8250;</span>
+                        <a href="#{request.contextPath}/catalogo.jsf?dep=#{catalogoBean.departamentoSeleccionado}">#{catalogoBean.nombreDepartamento}</a>
+                    </ui:fragment>
+                    <ui:fragment rendered="#{not empty catalogoBean.nombreGrupo}">
+                        <span>&#8250;</span>
+                        <span class="breadcrumbs__current">#{catalogoBean.nombreGrupo}</span>
+                    </ui:fragment>
+                </nav>
+                <h1 class="page-title">
+                    <ui:fragment rendered="#{catalogoBean.soloOfertas}">
+                        🔥 Ofertas del dia
+                    </ui:fragment>
+                    <ui:fragment rendered="#{not catalogoBean.soloOfertas and not empty catalogoBean.textoBusqueda}">
+                        Resultados: "#{catalogoBean.textoBusqueda}"
+                    </ui:fragment>
+                    <ui:fragment rendered="#{not catalogoBean.soloOfertas and empty catalogoBean.textoBusqueda and not empty catalogoBean.nombreGrupo}">
+                        #{catalogoBean.nombreGrupo}
+                    </ui:fragment>
+                    <ui:fragment rendered="#{not catalogoBean.soloOfertas and empty catalogoBean.textoBusqueda and empty catalogoBean.nombreGrupo and not empty catalogoBean.nombreDepartamento}">
+                        #{catalogoBean.nombreDepartamento}
+                    </ui:fragment>
+                    <ui:fragment rendered="#{not catalogoBean.soloOfertas and empty catalogoBean.textoBusqueda and empty catalogoBean.nombreDepartamento}">
+                        Catalogo
+                    </ui:fragment>
+                </h1>
+                <p class="page-lead">
+                    <h:outputText value="#{catalogoBean.productos.size()} producto(s)"/>
+                </p>
+            </header>
+
+            <div class="catalog-layout">
+                <aside class="filters">
+
+                    <section class="filter-group">
+                        <h4 class="filter-group__title">Departamento</h4>
+                        <ul class="filter-list">
+                            <li>
+                                <a class="#{empty catalogoBean.departamentoSeleccionado ? 'is-active' : ''}"
+                                   href="#{request.contextPath}/catalogo.jsf">Todos</a>
+                            </li>
+                            <ui:repeat value="#{catalogoBean.departamentos}" var="d">
+                                <li>
+                                    <a class="#{d.id eq catalogoBean.departamentoSeleccionado ? 'is-active' : ''}"
+                                       href="#{request.contextPath}/catalogo.jsf?dep=#{d.id}">#{d.nombre}</a>
+                                </li>
+                            </ui:repeat>
+                        </ul>
+                    </section>
+
+                    <ui:fragment rendered="#{not empty catalogoBean.gruposDelDepartamento}">
+                        <section class="filter-group">
+                            <h4 class="filter-group__title">Grupo</h4>
+                            <ul class="filter-list">
+                                <li>
+                                    <a class="#{empty catalogoBean.grupoSeleccionado ? 'is-active' : ''}"
+                                       href="#{request.contextPath}/catalogo.jsf?dep=#{catalogoBean.departamentoSeleccionado}">Todos</a>
+                                </li>
+                                <ui:repeat value="#{catalogoBean.gruposDelDepartamento}" var="g">
+                                    <li>
+                                        <a class="#{g.id eq catalogoBean.grupoSeleccionado ? 'is-active' : ''}"
+                                           href="#{request.contextPath}/catalogo.jsf?dep=#{catalogoBean.departamentoSeleccionado}&amp;grupo=#{g.id}">#{g.nombre}</a>
+                                    </li>
+                                </ui:repeat>
+                            </ul>
+                        </section>
+                    </ui:fragment>
+
+                    <ui:fragment rendered="#{not empty catalogoBean.categoriasDelGrupo}">
+                        <section class="filter-group">
+                            <h4 class="filter-group__title">Categoria</h4>
+                            <ul class="filter-list">
+                                <li>
+                                    <a class="#{empty catalogoBean.categoriaSeleccionada ? 'is-active' : ''}"
+                                       href="#{request.contextPath}/catalogo.jsf?dep=#{catalogoBean.departamentoSeleccionado}&amp;grupo=#{catalogoBean.grupoSeleccionado}">Todas</a>
+                                </li>
+                                <ui:repeat value="#{catalogoBean.categoriasDelGrupo}" var="c">
+                                    <li>
+                                        <a class="#{c.id eq catalogoBean.categoriaSeleccionada ? 'is-active' : ''}"
+                                           href="#{request.contextPath}/catalogo.jsf?dep=#{catalogoBean.departamentoSeleccionado}&amp;grupo=#{catalogoBean.grupoSeleccionado}&amp;cat=#{c.id}">#{c.nombre}</a>
+                                    </li>
+                                </ui:repeat>
+                            </ul>
+                        </section>
+                    </ui:fragment>
+
+                    <ui:fragment rendered="#{not empty catalogoBean.marcasDisponibles}">
+                        <section class="filter-group">
+                            <h4 class="filter-group__title">Marca</h4>
+                            <ul class="filter-list">
+                                <ui:repeat value="#{catalogoBean.marcasDisponibles}" var="m">
+                                    <li>
+                                        <a class="#{m.id eq catalogoBean.marcaSeleccionada ? 'is-active' : ''}"
+                                           href="#{request.contextPath}/catalogo.jsf?dep=#{catalogoBean.departamentoSeleccionado}#{empty catalogoBean.grupoSeleccionado ? '' : '&amp;grupo='.concat(catalogoBean.grupoSeleccionado)}#{empty catalogoBean.categoriaSeleccionada ? '' : '&amp;cat='.concat(catalogoBean.categoriaSeleccionada)}&amp;marca=#{m.id}">#{m.nombre}</a>
+                                    </li>
+                                </ui:repeat>
+                            </ul>
+                        </section>
+                    </ui:fragment>
+
+                    <section class="filter-group">
+                        <h4 class="filter-group__title">Precio</h4>
+                        <h:form prependId="false" styleClass="filter-price">
+                            <h:inputHidden value="#{catalogoBean.departamentoSeleccionado}">
+                                <f:param name="dep" value="#{catalogoBean.departamentoSeleccionado}"/>
+                            </h:inputHidden>
+                            <div class="filter-price__inputs">
+                                <input type="number" name="pmin" step="0.01" placeholder="Min"
+                                       value="#{catalogoBean.precioMin}"/>
+                                <input type="number" name="pmax" step="0.01" placeholder="Max"
+                                       value="#{catalogoBean.precioMax}"/>
+                            </div>
+                            <input type="hidden" name="dep"   value="#{catalogoBean.departamentoSeleccionado}"/>
+                            <input type="hidden" name="grupo" value="#{catalogoBean.grupoSeleccionado}"/>
+                            <input type="hidden" name="cat"   value="#{catalogoBean.categoriaSeleccionada}"/>
+                            <input type="hidden" name="marca" value="#{catalogoBean.marcaSeleccionada}"/>
+                            <button type="submit" class="btn btn--outline btn--block">Aplicar</button>
+                        </h:form>
+                    </section>
+
+                    <ui:fragment rendered="#{not empty catalogoBean.departamentoSeleccionado or not empty catalogoBean.marcaSeleccionada or not empty catalogoBean.precioMin or not empty catalogoBean.precioMax}">
+                        <a class="filters__clear" href="#{request.contextPath}/catalogo.jsf">Limpiar filtros</a>
+                    </ui:fragment>
+                </aside>
+
+                <div class="catalog-main">
+                    <ui:fragment rendered="#{catalogoBean.productos.size() > 0}">
+                        <div class="product-grid">
+                            <ui:repeat value="#{catalogoBean.productos}" var="producto">
+                                <ui:include src="product-card.xhtml">
+                                    <ui:param name="producto" value="#{producto}"/>
+                                </ui:include>
+                            </ui:repeat>
+                        </div>
+                    </ui:fragment>
+                    <ui:fragment rendered="#{catalogoBean.productos.size() == 0}">
+                        <div class="empty-state">
+                            <h3>Sin resultados</h3>
+                            <p>Prueba elegir otro departamento o limpia los filtros.</p>
+                            <a href="#{request.contextPath}/catalogo.jsf" class="btn btn--primary">Ver todo el catalogo</a>
+                        </div>
+                    </ui:fragment>
+                </div>
+            </div>
+        </section>
+    </ui:define>
+</ui:composition>

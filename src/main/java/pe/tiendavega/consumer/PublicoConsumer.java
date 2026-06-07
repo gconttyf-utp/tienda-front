@@ -2,6 +2,7 @@ package pe.tiendavega.consumer;
 
 import java.util.List;
 
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.WebTarget;
@@ -16,6 +17,7 @@ import pe.tiendavega.model.dto.ProductoDTO;
 import pe.tiendavega.model.dto.TiendaDTO;
 import pe.tiendavega.model.dto.UbigeoDTO;
 
+@ApplicationScoped
 public class PublicoConsumer {
 
     public List<DepartamentoDTO> obtenerDepartamentos() {
@@ -108,10 +110,12 @@ public class PublicoConsumer {
         }
     }
 
-    public List<ProductoDTO> obtenerProductos(Integer categoria, Integer marca) {
+    public List<ProductoDTO> obtenerProductos(Integer departamento, Integer grupo, Integer categoria, Integer marca) {
         try (Client client = ClientBuilder.newClient()) {
 
             WebTarget target = client.target(RutasConsumer.ENDPOINT_PUBLICO + "/productos")
+                                    .queryParam("depa", departamento)
+                                    .queryParam("grupo", grupo)
                                     .queryParam("categoria", categoria)
                                     .queryParam("marca", marca);
 
@@ -249,6 +253,7 @@ public class PublicoConsumer {
     }
 
     public List<ProductoDTO> obtenerOfertas() {
+        System.out.println("Obtener ofertas sin filtros");
         try (Client client = ClientBuilder.newClient()) {
 
             WebTarget target = client.target(RutasConsumer.ENDPOINT_PUBLICO + "/ofertas");

@@ -16,10 +16,10 @@
 
                 <div class="mega__panel">
                     <ul class="mega__deps">
-                        <ui:repeat value="#{layoutBean.menu}" var="d">
+                        <ui:repeat value="#{publicoBean.departamentos}" var="d">
                             <li class="mega__dep">
                                 <a class="mega__dep-link"
-                                   href="#{request.contextPath}/catalogo.xhtml?dep=#{d.id}">
+                                   href="#{request.contextPath}/catalogo.jsf?dep=#{d.id}">
                                     <span class="mega__dep-name">#{d.nombre}</span>
                                     <svg class="mega__arrow" viewBox="0 0 24 24" aria-hidden="true">
                                         <path d="M9 6l6 6-6 6"/>
@@ -28,11 +28,11 @@
                                 <div class="mega__flyout">
                                     <h4 class="mega__flyout-title">#{d.nombre}</h4>
                                     <a class="mega__flyout-all"
-                                       href="#{request.contextPath}/catalogo.xhtml?dep=#{d.id}">Ver todo</a>
+                                       href="#{request.contextPath}/catalogo.jsf?dep=#{d.id}">Ver todo</a>
                                     <ul class="mega__groups">
-                                        <ui:repeat value="#{d.grupos}" var="g">
+                                        <ui:repeat value="#{publicoBean.getGrupos(d.id)}" var="g">
                                             <li>
-                                                <a href="#{request.contextPath}/catalogo.xhtml?dep=#{d.id}&amp;grupo=#{g.id}">#{g.nombre}</a>
+                                                <a href="#{request.contextPath}/catalogo.jsf?dep=#{d.id}&amp;grupo=#{g.id}">#{g.nombre}</a>
                                             </li>
                                         </ui:repeat>
                                     </ul>
@@ -44,14 +44,14 @@
             </div>
 
             <ul class="navbar__quick">
-                <ui:repeat value="#{layoutBean.categorias}" var="c" varStatus="st">
+                <ui:repeat value="#{publicoBean.departamentos}" var="c" varStatus="st" size="8">
                     <li>
-                        <a href="#{request.contextPath}/catalogo.xhtml?dep=#{c.id}">#{c.nombre}</a>
+                        <a href="#{request.contextPath}/catalogo.jsf?dep=#{c.id}">#{c.nombre}</a>
                     </li>
                 </ui:repeat>
             </ul>
 
-            <a class="navbar__offers" href="#{request.contextPath}/catalogo.xhtml?ofertas=1">
+            <a class="navbar__offers" href="#{request.contextPath}/catalogo.jsf?ofertas=1">
                 <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M20.5 11l-8.5-8.5a1.4 1.4 0 0 0-1-.4H4a2 2 0 0 0-2 2v7.1c0 .4.1.7.4 1L11 20.6a1.4 1.4 0 0 0 2 0l7.5-7.5a1.4 1.4 0 0 0 0-2zM6.5 8a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
                 </svg>

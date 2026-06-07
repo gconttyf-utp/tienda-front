@@ -14,7 +14,7 @@
         <section class="hero">
             <div class="container hero__grid">
                 <ui:repeat value="#{publicoBean.obtenerBanners()}" var="b">
-                    <div class="hero__main" jsf:style="background: #{b.colorFondo}; color: #{b.colorTexto};">
+                    <h:panelGroup layout="block" styleClass="hero__main" jsf:style="background: #{b.colorFondo}; color: #{b.colorTexto};">
                         <div class="hero__main-text">
                             <span class="hero__badge">#{b.badge}</span>
                             <h1>#{b.titulo}</h1>
@@ -25,7 +25,7 @@
                             <span class="hero__price">S/ 24.90</span>
                             <span class="hero__price-old">S/ 29.90</span>
                         </div>
-                    </div>
+                    </h:panelGroup>
                 </ui:repeat>
 
                 <aside class="hero__side">

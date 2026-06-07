@@ -1,5 +1,6 @@
 package pe.tiendavega.beans;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,9 @@ import pe.tiendavega.model.Beneficio;
 
 @Named
 @RequestScoped
-public class GlobalBean {
+public class GlobalBean implements Serializable{
+
+    private static final long serialVersionUID = 1122333455L;
 
     @Produces
     @Model
