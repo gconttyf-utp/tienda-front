@@ -3,9 +3,9 @@
                 xmlns:f="jakarta.faces.core"
                 xmlns:jsf="jakarta.faces.passthrough"
                 xmlns:ui="jakarta.faces.facelets">
-                
+
     <article class="product-card #{producto.agotado ? 'product-card--soldout' : ''}">
-        <div class="product-card__media" style="background: #{producto.colorPlaceholder};">
+        <h:panelGroup layout="block" styleClass="product-card__media" jsf:style="background: #{producto.colorPlaceholder};">
             <ui:fragment rendered="#{producto.descuento > 0 and not producto.agotado}">
                 <span class="product-card__discount">-#{producto.descuento}%</span>
             </ui:fragment>
@@ -24,7 +24,7 @@
             <ui:fragment rendered="#{empty producto.rutaImg}">
                 <span class="product-card__placeholder">#{producto.sku}</span>
             </ui:fragment>
-        </div>
+        </h:panelGroup>
         <div class="product-card__body">
             <span class="product-card__brand">#{producto.marcaID}</span>
             <h3 class="product-card__name">#{producto.descripcion}</h3>

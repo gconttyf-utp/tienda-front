@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.annotation.PostConstruct;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -109,7 +108,7 @@ public class CatalogoBean implements Serializable{
         boolean tieneFiltroGrupo = grupoSeleccionado != null && grupoSeleccionado > 0;
         boolean tieneFiltroCategoria = categoriaSeleccionada != null && categoriaSeleccionada > 0;
         boolean tieneFiltroMarca = marcaSeleccionada != null && marcaSeleccionada > 0;
-        boolean tieneFiltroPrecio = precioMin != null || precioMax != null;
+        //boolean tieneFiltroPrecio = precioMin != null || precioMax != null;
         
         System.out.println("Departamento: " + departamentoSeleccionado);
         System.out.println("Grupo: " + grupoSeleccionado);
