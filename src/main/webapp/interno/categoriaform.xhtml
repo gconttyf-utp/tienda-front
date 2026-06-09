@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<ui:composition template="base.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:jsf="jakarta.faces.passthrough"
+                xmlns:ui="jakarta.faces.facelets">
+    
+    <f:metadata>
+        <f:viewParam name="id" value="#{categoriaBean.id}"/>
+        <f:viewParam name="depa" value="#{categoriaBean.departamentoId}"/>
+    </f:metadata>
+
+    <ui:define name="content">
+        
+        <h:panelGrid border="1" class="table">
+            <f:facet name="header">
+                <h:outputText value="#{categoriaDTO.id > 0 ? 'Editar' : 'Crear'} Grupo"/>
+            </f:facet>
+
+            <h:form id="formulario">
+                <h:panelGrid columns="2" class="table table-hover table-striped">
+                    <h:outputLabel value="Nombre" for="nombre" class="col-form-label"/>
+                    <h:inputText id="nombre" value="#{categoriaDTO.nombre}" label="Nombre" class="form-control" jsf:placeholder="Gaseosas"/>
+
+                    <h:outputLabel value="Departamento" for="departamento" class="col-form-label"/>
+                    <h:selectOneMenu id="departamento" value="#{categoriaBean.departamentoId}" class="form-select" converter="jakarta.faces.Integer">
+                        <f:selectItem itemLabel="--- seleccione un departamento ---" itemValue="#{null}" noSelectionOption="true" />
+                        <f:selectItems value="#{categoriaBean.departamentos}" var="dep" itemLabel="#{dep.nombre}" itemValue="#{dep.id}"/>
+                        <f:ajax execute="@this" render="grupo" />
+                    </h:selectOneMenu>
+
+                    <h:outputLabel value="Grupo" for="grupo" class="col-form-label"/>
+                    <h:selectOneMenu id="grupo" value="#{categoriaDTO.grupoId}" class="form-select" converter="jakarta.faces.Integer">
+                        <f:selectItem itemLabel="--- seleccione un grupo ---" itemValue="#{null}" noSelectionOption="true" />
+                        <f:selectItems value="#{categoriaBean.grupos(categoriaBean.departamentoId)}" var="gru" itemLabel="#{gru.nombre}" itemValue="#{gru.id}"/>
+                    </h:selectOneMenu>
+
+                    <h:outputLabel value="Estado" for="estado" class="col-form-label"/>
+                    <h:selectOneMenu id="estado" value="#{categoriaDTO.estado}" class="form-select">
+                        <f:selectItem itemValue="1" itemLabel="Activo"/>
+                        <f:selectItem itemValue="0" itemLabel="Inactivo"/>
+                    </h:selectOneMenu>
+
+                    <h:commandButton value="#{categoriaDTO.id>0 ? 'Guardar Cambios': 'Crear'}" action="#{categoriaDTO.procesar}" class="btn btn-primary"/>
+                    <h:link value="Cancelar" outcome="categoria.xhtml?depa=#{categoriaBean.departamentoId}&amp;grupo=#{categoriaDTO.grupoId}" class="btn btn-primary"/>
+                    
+                    <h:inputHidden value="#{categoriaDTO.id}"/>
+                    <p>&#160;</p>
+
+                </h:panelGrid>
+            </h:form>
+
+        </h:panelGrid>            
+        
+    </ui:define>
+
+</ui:composition>

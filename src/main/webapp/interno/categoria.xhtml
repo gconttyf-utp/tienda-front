@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<ui:composition template="base.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:jsf="jakarta.faces.passthrough"
+                xmlns:ui="jakarta.faces.facelets">
+    
+    <f:metadata>
+        <f:viewParam name="depa" value="#{categoriaBean.departamentoId}"/>
+        <f:viewParam name="grupo" value="#{categoriaBean.grupoId}"/>
+    </f:metadata>
+    
+    <ui:define name="content">
+        
+        <h:panelGrid border="1" class="table">
+            <f:facet name="header">
+                <!--<div class="d-flex justify-content-between align-items-center">-->
+                <div class="d-flex align-items-center gap-3">
+                    <h:outputText value="#{categoriaBean.titulo} por Departamento" class="m-0 fs-5 fw-bold"/>
+
+                    <h:form id="filtroForm" class="m-0 p-0 d-flex align-items-center gap-3">
+                        <h:selectOneMenu value="#{categoriaBean.departamentoId}" class="form-select w-auto" converter="jakarta.faces.Integer">
+                            <f:selectItem itemLabel="--- seleccione un departamento ---" itemValue="#{null}" noSelectionOption="true"/>
+                            <f:selectItems value="#{categoriaBean.departamentos}" var="dep" itemLabel="#{dep.nombre}" itemValue="#{dep.id}"/>
+                            <!-- f:ajax renderiza el contenedor panelGroup que agrupa la tabla y el mensaje vacío -->
+                            <f:ajax execute="@this" render="grupoSelect :tablaPanel" />
+                        </h:selectOneMenu>
+
+                        <h:outputText value="y por Grupo" class="m-0 fs-5 fw-bold"/>
+
+                        <h:selectOneMenu value="#{categoriaBean.grupoId}" class="form-select w-auto" converter="jakarta.faces.Integer" id="grupoSelect">
+                            <f:selectItem itemLabel="--- seleccione un grupo ---" itemValue="#{null}" noSelectionOption="true"/>
+                            <f:selectItems value="#{categoriaBean.grupos(categoriaBean.departamentoId)}" var="gru" itemLabel="#{gru.nombre}" itemValue="#{gru.id}"/>
+                            <!-- f:ajax renderiza el contenedor panelGroup que agrupa la tabla y el mensaje vacío -->
+                            <f:ajax execute="@this" render=":tablaPanel" />
+                        </h:selectOneMenu>
+                    </h:form>
+
+                    
+
+                    <h:button value="Agregar Categoría" outcome="categoriaform" class="btn btn-primary btn-sm text-nowrap ms-auto" />
+                </div>
+            </f:facet>
+        
+            <h:panelGroup id="tablaPanel" layout="block">
+                <h:outputText value="No existen categorías en la base de datos!" rendered="#{empty categoriaBean.obtenerCategorias()}"
+                            class="alert alert-warning d-block my-2"/>
+                <h:dataTable var="t" value="#{categoriaBean.obtenerCategorias()}" rendered="#{not empty categoriaBean.obtenerCategorias()}" 
+                            class="table table-hover table-striped" id="tabla">
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Id"/>
+                        </f:facet>
+                        <h:outputText value="#{t.id}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Nombre"/>
+                        </f:facet>
+                        <h:outputText value="#{t.nombre}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Departamento"/>
+                        </f:facet>
+                        <h:outputText value="#{categoriaBean.nombreDepartamento(categoriaBean.departamentoId)}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Grupo"/>
+                        </f:facet>
+                        <h:outputText value="#{categoriaBean.nombreGrupo(categoriaBean.grupoId)}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Estado"/>
+                        </f:facet>
+                        <h:outputText value="#{t.estado eq 1 ? 'Activo' : 'Inactivo'}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Editar"/>
+                        </f:facet>
+                        <h:link value="Editar" outcome="categoriaform" class="btn btn-sm btn-info">
+                            <f:param name="id" value="#{t.id}"/>
+                            <f:param name="depa" value="#{categoriaBean.departamentoId}"/>
+                        </h:link>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Cambiar Estado"/>
+                        </f:facet>
+                        <h:form id="eliminarForm">
+                            <h:commandLink value="#{t.estado eq 1 ? 'Inactivar' : 'Activar'}" action="#{categoriaBean.cambiarEstado(t)}"
+                                        class="btn btn-sm #{t.estado eq 1 ? 'btn-danger' : 'btn-success'}"
+                                        onclick="return confirm('esta seguro que desea cambiar el estado?')"/>
+                        </h:form>
+                    </h:column>
+                </h:dataTable>
+            </h:panelGroup>
+        </h:panelGrid>            
+        
+    </ui:define>
+
+</ui:composition>

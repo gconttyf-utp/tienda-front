@@ -22,7 +22,6 @@ public class TiendaBean implements Serializable {
 
     private Integer id;
     private TiendaDTO tiendaDTO;
-    private List<Integer> estados;
     private String titulo;
 
     @Inject
