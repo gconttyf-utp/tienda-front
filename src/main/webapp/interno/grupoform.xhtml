@@ -6,32 +6,38 @@
                 xmlns:jsf="jakarta.faces.passthrough"
                 xmlns:ui="jakarta.faces.facelets">
     
+    <f:metadata>
+        <f:viewParam name="id" value="#{grupoBean.id}"/>
+    </f:metadata>
+
     <ui:define name="content">
         
-        <f:metadata>
-            <f:viewParam name="id" value="#{departamentoBean.id}"/>
-        </f:metadata>
-
         <h:panelGrid border="1" class="table">
             <f:facet name="header">
-                <h:outputText value="#{departamentoDTO.id > 0 ? 'Editar' : 'Crear'} Departamento"/>
+                <h:outputText value="#{grupoDTO.id > 0 ? 'Editar' : 'Crear'} Grupo"/>
             </f:facet>
 
-            <h:form id="formDepartamento">
+            <h:form id="formulario">
                 <h:panelGrid columns="2" class="table table-hover table-striped">
                     <h:outputLabel value="Nombre" for="nombre" class="col-form-label"/>
-                    <h:inputText id="nombre" value="#{departamentoDTO.nombre}" label="Nombre" class="form-control" jsf:placeholder="Tecnología"/>
+                    <h:inputText id="nombre" value="#{grupoDTO.nombre}" label="Nombre" class="form-control" jsf:placeholder="Televisores"/>
+
+                    <h:outputLabel value="Departamento" for="departamento" class="col-form-label"/>
+                    <h:selectOneMenu id="departamento" value="#{grupoDTO.departamentoId}" class="form-select" converter="jakarta.faces.Integer">
+                        <f:selectItem itemLabel="--- seleccione un departamento ---" itemValue="#{null}" noSelectionOption="true" />
+                        <f:selectItems value="#{grupoBean.departamentos}" var="dep" itemLabel="#{dep.nombre}" itemValue="#{dep.id}"/>
+                    </h:selectOneMenu>
 
                     <h:outputLabel value="Estado" for="estado" class="col-form-label"/>
-                    <h:selectOneMenu id="estado" value="#{departamentoDTO.estado}" class="form-select">
+                    <h:selectOneMenu id="estado" value="#{grupoDTO.estado}" class="form-select">
                         <f:selectItem itemValue="1" itemLabel="Activo"/>
                         <f:selectItem itemValue="0" itemLabel="Inactivo"/>
                     </h:selectOneMenu>
 
-                    <h:commandButton value="#{departamentoDTO.id>0 ? 'Guardar Cambios': 'Crear'}" action="#{departamentoBean.procesar}" class="btn btn-primary"/>
-                    <h:link value="Cancelar" outcome="departamento" class="btn btn-primary"/>
+                    <h:commandButton value="#{grupoDTO.id>0 ? 'Guardar Cambios': 'Crear'}" action="#{grupoBean.procesar}" class="btn btn-primary"/>
+                    <h:link value="Cancelar" outcome="grupo.xhtml?depa=#{grupoDTO.departamentoId}" class="btn btn-primary"/>
                     
-                    <h:inputHidden value="#{departamentoDTO.id}"/>
+                    <h:inputHidden value="#{grupoDTO.id}"/>
                     <p>&#160;</p>
 
                 </h:panelGrid>

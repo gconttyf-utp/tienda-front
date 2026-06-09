@@ -46,6 +46,7 @@ public class GrupoBean implements Serializable {
     @Model
     public GrupoDTO grupoDTO() {
         this.grupoDTO = new GrupoDTO();
+        System.out.println("ID grupoDTO= " + id);
         if ( id != null && id > 0 ){
             this.grupoDTO = grupoConsumer.obtenerGrupo(loginBean.getTokenUsuario(), id);
         }
@@ -59,8 +60,6 @@ public class GrupoBean implements Serializable {
             // Idealmente aquí deberías redireccionar al login
             return java.util.Collections.emptyList();
         }
-        System.out.println("Enviando petición con token: " + token);
-        System.out.println("departamentoId: " + departamentoId);
         return grupoConsumer.obtenerGrupos(token, departamentoId, List.of(0,1));
     }
 
@@ -90,7 +89,7 @@ public class GrupoBean implements Serializable {
             System.out.println("¡ADVERTENCIA! Intentando crear o actualizar grupo pero no hay token en la sesión.");
             return "/loginadmin.jsf?faces-redirect=true";
         }
-
+        System.out.println("grupoDTO= " + grupoDTO);
         GrupoDTO grupoDB = null;
 
         if ( grupoDTO.getId() != null && grupoDTO.getId() > 0 ){
@@ -113,7 +112,7 @@ public class GrupoBean implements Serializable {
         }
 
         facesContext.getExternalContext().getFlash().setKeepMessages(true);
-        return "/interno/grupo.jsf?faces-redirect=true";
+        return "/interno/grupo.jsf?depa=" + grupoDTO.getDepartamentoId() + "&faces-redirect=true";
     }
 
     public String getTitulo() {
