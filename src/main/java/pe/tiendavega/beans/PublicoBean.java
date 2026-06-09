@@ -12,6 +12,7 @@ import pe.tiendavega.model.Banner;
 import pe.tiendavega.model.dto.DepartamentoDTO;
 import pe.tiendavega.model.dto.GrupoDTO;
 import pe.tiendavega.model.dto.ProductoDTO;
+import pe.tiendavega.model.dto.UbigeoDTO;
 
 // @Named hace que esta clase sea visible desde el HTML usando "departamentoBean"
 @Named
@@ -39,6 +40,10 @@ public class PublicoBean implements Serializable{
 
     public List<GrupoDTO> getGrupos(Integer departamento) {
         return publicoConsumer.obtenerGrupos(departamento);
+    }
+
+    public List<UbigeoDTO> getUbigeoDepartamentos() {
+        return publicoConsumer.obtenerUbigeoDepartamento();
     }
 
     public List<ProductoDTO> ofertas() {

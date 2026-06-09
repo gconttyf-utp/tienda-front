@@ -252,6 +252,25 @@ public class PublicoConsumer {
         }
     }
 
+    public List<UbigeoDTO> obtenerUbigeoDepartamento() {
+        try (Client client = ClientBuilder.newClient()) {
+
+            WebTarget target = client.target(RutasConsumer.ENDPOINT_UBIGEO + "/ubigeo/departamentos");
+
+            Response response = target.request(MediaType.APPLICATION_JSON).get();
+
+            if (response.getStatus() == Response.Status.OK.getStatusCode()) {
+                
+                return response.readEntity(new GenericType<List<UbigeoDTO>>() {});
+                
+            } else {
+                System.out.println("Error en la petición: " + response.getStatus());
+                return null;
+            }
+
+        }
+    }
+
     public List<ProductoDTO> obtenerOfertas() {
         System.out.println("Obtener ofertas sin filtros");
         try (Client client = ClientBuilder.newClient()) {

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<ui:composition template="base.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:jsf="jakarta.faces.passthrough"
+                xmlns:ui="jakarta.faces.facelets">
+    
+    <ui:define name="content">
+        
+        <f:metadata>
+            <f:viewParam name="id" value="#{tiendaBean.id}"/>
+        </f:metadata>
+
+        <h:panelGrid border="1" class="table">
+            <f:facet name="header">
+                <h:outputText value="#{tiendaDTO.id > 0 ? 'Editar' : 'Crear'} Tienda"/>
+            </f:facet>
+
+            <h:form id="formTienda">
+                <h:panelGrid columns="2" class="table table-hover table-striped">
+                    <h:outputLabel value="Nombre" for="nombre" class="col-form-label"/>
+                    <h:inputText id="nombre" value="#{tiendaDTO.nombre}" label="Nombre" class="form-control" jsf:placeholder="VegaMarket UTP"/>
+
+                    <h:outputLabel value="Dirección" for="direccion" class="col-form-label"/>
+                    <h:inputText id="direccion" value="#{tiendaDTO.direccion}" label="Dirección" class="form-control" jsf:placeholder="Av. Los Olivos"/>
+
+                    <h:outputLabel value="Ubigeo" for="codUbigeo" class="col-form-label"/>
+                    <h:inputText id="codUbigeo" value="#{tiendaDTO.codUbigeo}" label="Ubigeo" class="form-control" jsf:placeholder="150101"/>
+
+                    <h:outputLabel value="Teléfono" for="telefono" class="col-form-label"/>
+                    <h:inputText id="telefono" value="#{tiendaDTO.telefono}" label="Teléfono" class="form-control" jsf:placeholder="999999999"/>
+
+                    <h:outputLabel value="Horario" for="horario" class="col-form-label"/>
+                    <h:inputText id="horario" value="#{tiendaDTO.horario}" label="Horario" class="form-control" jsf:placeholder="Lun-Dom 7:00-22:00"/>
+
+                    <h:outputLabel value="Latitud" for="latitud" class="col-form-label"/>
+                    <h:inputText id="latitud" value="#{tiendaDTO.latitud}" label="Latitud" class="form-control" jsf:placeholder="-12.0954000"/>
+
+                    <h:outputLabel value="Longitud" for="longitud" class="col-form-label"/>
+                    <h:inputText id="longitud" value="#{tiendaDTO.longitud}" label="Longitud" class="form-control" jsf:placeholder="-77.0558000"/>
+
+                    <h:outputLabel value="Estado" for="estado" class="col-form-label"/>
+                    <h:selectOneMenu id="estado" value="#{tiendaDTO.estado}" class="form-select">
+                        <f:selectItem itemValue="1" itemLabel="Activo"/>
+                        <f:selectItem itemValue="0" itemLabel="Inactivo"/>
+                    </h:selectOneMenu>
+
+                    <h:commandButton value="#{tiendaDTO.id>0 ? 'Guardar Cambios': 'Crear'}" action="#{tiendaBean.procesar}" class="btn btn-primary"/>
+                    <h:link value="Cancelar" outcome="tiendas" class="btn btn-primary"/>
+                    
+                    <h:inputHidden value="#{tiendaDTO.id}"/>
+                    <p>&#160;</p>
+
+                </h:panelGrid>
+            </h:form>
+
+        </h:panelGrid>            
+        
+    </ui:define>
+
+</ui:composition>
