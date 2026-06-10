@@ -42,7 +42,7 @@
                         <f:selectItem itemValue="0" itemLabel="Inactivo"/>
                     </h:selectOneMenu>
 
-                    <h:commandButton value="#{categoriaDTO.id>0 ? 'Guardar Cambios': 'Crear'}" action="#{categoriaDTO.procesar}" class="btn btn-primary"/>
+                    <h:commandButton value="#{categoriaDTO.id>0 ? 'Guardar Cambios': 'Crear'}" action="#{categoriaBean.procesar}" class="btn btn-primary"/>
                     <h:link value="Cancelar" outcome="categoria.xhtml?depa=#{categoriaBean.departamentoId}&amp;grupo=#{categoriaDTO.grupoId}" class="btn btn-primary"/>
                     
                     <h:inputHidden value="#{categoriaDTO.id}"/>

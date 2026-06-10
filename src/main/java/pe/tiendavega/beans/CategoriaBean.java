@@ -119,7 +119,7 @@ public class CategoriaBean implements Serializable {
         }
 
         facesContext.getExternalContext().getFlash().setKeepMessages(true);
-        return "/interno/categoria.jsf?depa=" + departamentoId + "&grupo=" + grupoId + "&faces-redirect=true";
+        return "/interno/categoria.jsf?depa=" + departamentoId + "&grupo=" + categoriaDTO.getGrupoId() + "&faces-redirect=true";
     }
 
     public String getTitulo() {
