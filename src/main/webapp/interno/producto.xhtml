@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<ui:composition template="base.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:jsf="jakarta.faces.passthrough"
+                xmlns:ui="jakarta.faces.facelets">
+    
+    <f:metadata>
+        <f:viewParam name="depa" value="#{productoBean.departamentoId}"/>
+        <f:viewParam name="grupo" value="#{productoBean.grupoId}"/>
+        <f:viewParam name="cate" value="#{productoBean.categoriaId}"/>
+    </f:metadata>
+    
+    <ui:define name="content">
+        
+        <h:panelGrid border="1" class="table">
+            <f:facet name="header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h:outputText value="#{productoBean.titulo}" class="m-0 fs-5 fw-bold"/>
+                    <h:button value="Agregar Producto" outcome="productoform" class="btn btn-primary btn-sm text-nowrap ms-auto" />
+                </div>
+                <div class="d-flex align-items-center gap-3">
+                    <h:outputText value="Departamento" class="m-0 fs-5 fw-bold"/>
+
+                    <h:form id="filtroForm" class="m-0 p-0 d-flex align-items-center gap-3">
+                        <h:selectOneMenu value="#{productoBean.departamentoId}" class="form-select w-auto" converter="jakarta.faces.Integer">
+                            <f:selectItem itemLabel="--- seleccione un departamento ---" itemValue="#{null}" noSelectionOption="true"/>
+                            <f:selectItems value="#{productoBean.departamentos}" var="dep" itemLabel="#{dep.nombre}" itemValue="#{dep.id}"/>
+                            <!-- f:ajax renderiza el contenedor panelGroup que agrupa la tabla y el mensaje vacío -->
+                            <f:ajax execute="@this" render="grupoSelect categoriaSelect :tablaPanel" listener="#{productoBean.alCambiarDepartamento}"/>
+                        </h:selectOneMenu>
+
+                        <h:outputText value="Grupo" class="m-0 fs-5 fw-bold"/>
+
+                        <h:selectOneMenu value="#{productoBean.grupoId}" class="form-select w-auto" converter="jakarta.faces.Integer" id="grupoSelect">
+                            <f:selectItem itemLabel="--- seleccione un grupo ---" itemValue="#{null}" noSelectionOption="true"/>
+                            <f:selectItems value="#{productoBean.grupos(productoBean.departamentoId)}" var="gru" itemLabel="#{gru.nombre}" itemValue="#{gru.id}"/>
+                            <!-- f:ajax renderiza el contenedor panelGroup que agrupa la tabla y el mensaje vacío -->
+                            <f:ajax execute="@this" render="categoriaSelect :tablaPanel" listener="#{productoBean.alCambiarGrupo}"/>
+                        </h:selectOneMenu>
+
+                        <h:outputText value="Categoría" class="m-0 fs-5 fw-bold"/>
+
+                        <h:selectOneMenu value="#{productoBean.categoriaId}" class="form-select w-auto" converter="jakarta.faces.Integer" id="categoriaSelect">
+                            <f:selectItem itemLabel="--- seleccione una categoría ---" itemValue="#{null}" noSelectionOption="true"/>
+                            <f:selectItems value="#{productoBean.categorias(productoBean.grupoId)}" var="cat" itemLabel="#{cat.nombre}" itemValue="#{cat.id}"/>
+                            <!-- f:ajax renderiza el contenedor panelGroup que agrupa la tabla y el mensaje vacío -->
+                            <f:ajax execute="@this" render=":tablaPanel" />
+                        </h:selectOneMenu>
+                    </h:form>
+                </div>
+            </f:facet>
+        
+            <h:panelGroup id="tablaPanel" layout="block">
+                <h:outputText value="No existen productos en la base de datos!" rendered="#{empty productoBean.obtenerProductos()}"
+                            class="alert alert-warning d-block my-2"/>
+                <h:dataTable var="t" value="#{productoBean.obtenerProductos()}" rendered="#{not empty productoBean.obtenerProductos()}" 
+                            class="table table-hover table-striped" id="tabla">
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Id"/>
+                        </f:facet>
+                        <h:outputText value="#{t.id}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Descripción"/>
+                        </f:facet>
+                        <h:outputText value="#{t.descripcion}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Departamento"/>
+                        </f:facet>
+                        <h:outputText value="#{productoBean.nombreDepartamento(productoBean.departamentoId)}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Grupo"/>
+                        </f:facet>
+                        <h:outputText value="#{productoBean.nombreGrupo(productoBean.grupoId)}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Categoría"/>
+                        </f:facet>
+                        <h:outputText value="#{productoBean.nombreCategoria(productoBean.categoriaId)}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Estado"/>
+                        </f:facet>
+                        <h:outputText value="#{t.estado eq 1 ? 'Activo' : 'Inactivo'}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Editar"/>
+                        </f:facet>
+                        <h:link value="Editar" outcome="productoform" class="btn btn-sm btn-info">
+                            <f:param name="id" value="#{t.id}"/>
+                            <f:param name="depa" value="#{productoBean.departamentoId}"/>
+                            <f:param name="grupo" value="#{productoBean.grupoId}"/>
+                            <f:param name="cate" value="#{productoBean.categoriaId}"/>
+                        </h:link>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Cambiar Estado"/>
+                        </f:facet>
+                        <h:form id="eliminarForm">
+                            <h:commandLink value="#{t.estado eq 1 ? 'Inactivar' : 'Activar'}" action="#{productoBean.cambiarEstado(t)}"
+                                        class="btn btn-sm #{t.estado eq 1 ? 'btn-danger' : 'btn-success'}"
+                                        onclick="return confirm('esta seguro que desea cambiar el estado?')"/>
+                        </h:form>
+                    </h:column>
+                </h:dataTable>
+            </h:panelGroup>
+        </h:panelGrid>            
+        
+    </ui:define>
+
+</ui:composition>
