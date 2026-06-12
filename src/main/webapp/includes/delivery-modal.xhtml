@@ -31,10 +31,7 @@
                                             
                                     <div class="tienda-item__media">
                                         <ui:fragment rendered="#{not empty t.imagenUrl}">
-                                            <img src="#{request.contextPath}/resources/images/productos/#{t.imagenUrl}"
-                                                 alt="#{t.nombre}"
-                                                 class="tienda-item__thumb"
-                                                 loading="lazy"/>
+                                            <h:graphicImage value="/media/tiendas/#{t.imagenUrl}" alt="#{t.nombre}" styleClass="tienda-item__thumb" jsf:loading="lazy"/>
                                         </ui:fragment>
                                         <ui:fragment rendered="#{empty t.imagenUrl}">
                                             <span class="tienda-item__thumb tienda-item__thumb--ph">V</span>

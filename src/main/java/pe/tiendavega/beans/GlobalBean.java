@@ -67,4 +67,12 @@ public class GlobalBean implements Serializable{
         return beneficios;
     }
 
+    @Produces
+    @ApplicationScoped
+    @Named("rutaImagenes")
+    public String rutaImagenes() {
+        //return "/home/gconti/proyectos/utp/proyectos/tienda-front/src/main/webapp";
+        return "D:/PROYECTOS/utp/tienda-front/src/main/webapp";
+    }
+
 }

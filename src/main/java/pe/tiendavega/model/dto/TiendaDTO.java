@@ -33,4 +33,8 @@ public class TiendaDTO {
 
     private String nombreUbigeo;
     
+    public String getImagenUrl() {
+        return imagenUrl.replace(" ", "");
+    }
+
 }

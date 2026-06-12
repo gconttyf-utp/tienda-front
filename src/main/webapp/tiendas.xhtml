@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <ui:composition template="/templates/base.xhtml"
                 xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:jsf="jakarta.faces.passthrough"
                 xmlns:ui="jakarta.faces.facelets">
 
     <ui:define name="title">Nuestras tiendas - #{titulo}</ui:define>
@@ -20,8 +23,7 @@
                     <article class="tienda-card">
                         <div class="tienda-card__media">
                             <ui:fragment rendered="#{not empty t.imagenUrl}">
-                                <img src="#{request.contextPath}/resources/images/productos/#{t.imagenUrl}"
-                                     alt="#{t.nombre}" class="tienda-card__image" loading="lazy"/>
+                                <h:graphicImage value="/media/tiendas/#{t.imagenUrl}" alt="#{t.nombre}" styleClass="tienda-card__image" jsf:loading="lazy"/>
                             </ui:fragment>
                             <ui:fragment rendered="#{empty t.imagenUrl}">
                                 <span class="tienda-card__placeholder">V</span>

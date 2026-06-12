@@ -17,7 +17,7 @@
                 <h:outputText value="#{tiendaDTO.id > 0 ? 'Editar' : 'Crear'} Tienda"/>
             </f:facet>
 
-            <h:form id="formTienda">
+            <h:form id="formTienda" enctype="multipart/form-data">
                 <h:panelGrid columns="2" class="table table-hover table-striped">
                     <h:outputLabel value="Nombre" for="nombre" class="col-form-label"/>
                     <h:inputText id="nombre" value="#{tiendaDTO.nombre}" label="Nombre" class="form-control" jsf:placeholder="VegaMarket UTP"/>
@@ -40,6 +40,14 @@
                     <h:outputLabel value="Longitud" for="longitud" class="col-form-label"/>
                     <h:inputText id="longitud" value="#{tiendaDTO.longitud}" label="Longitud" class="form-control" jsf:placeholder="-77.0558000"/>
 
+                    <h:outputLabel value="Imagen" for="fileUpload" class="col-form-label"/>
+                    <h:panelGroup layout="block" class="input-group">
+                        <span class="input-group-text bg-light text-secondary font-monospace small" style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                            #{empty tiendaDTO.imagenUrl ? 'Sin imagen' : tiendaDTO.imagenUrl}
+                        </span>
+                        <h:inputFile id="fileUpload" value="#{tiendaBean.archivoImagen}" class="form-control" />
+                    </h:panelGroup>
+
                     <h:outputLabel value="Estado" for="estado" class="col-form-label"/>
                     <h:selectOneMenu id="estado" value="#{tiendaDTO.estado}" class="form-select">
                         <f:selectItem itemValue="1" itemLabel="Activo"/>
@@ -50,7 +58,24 @@
                     <h:link value="Cancelar" outcome="tiendas" class="btn btn-primary"/>
                     
                     <h:inputHidden value="#{tiendaDTO.id}"/>
-                    <p>&#160;</p>
+                    <h:outputText value="" />
+                    
+                    <f:facet name="footer">
+                        <div class="text-center mt-4 p-3 bg-light rounded">
+                            
+                            <h:graphicImage value="/media/tiendas/#{tiendaDTO.imagenUrl}" 
+                                            rendered="#{not empty tiendaDTO.imagenUrl}" 
+                                            class="img-fluid img-thumbnail shadow-sm" 
+                                            style="max-height: 250px; object-fit: contain;"/>
+                            
+                            <h:panelGroup rendered="#{empty tiendaDTO.imagenUrl}">
+                                <span class="text-muted fst-italic">
+                                    <i class="bi bi-image me-2"></i> No hay imagen disponible para esta tienda
+                                </span>
+                            </h:panelGroup>
+                            
+                        </div>
+                    </f:facet>
 
                 </h:panelGrid>
             </h:form>

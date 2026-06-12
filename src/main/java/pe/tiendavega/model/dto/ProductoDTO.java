@@ -54,4 +54,8 @@ public class ProductoDTO {
 
     private Boolean agotado;
 
+    public String getRutaImg() {
+        return rutaImg.replace(" ", "");
+    }
+
 }
