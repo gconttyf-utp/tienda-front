@@ -1,5 +1,7 @@
 package pe.tiendavega.consumer;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -13,6 +15,10 @@ import java.nio.file.Files;
 @WebServlet("/media/*")
 public class ImageServlet extends HttpServlet {
 
+    //private String rutaBaseImagenes;
+
+    @Inject
+    @Named("rutaImagenes")
     private String rutaBaseImagenes;
 
     @Override
@@ -20,7 +26,8 @@ public class ImageServlet extends HttpServlet {
         // LEER LA RUTA DINÁMICAMENTE:
         // Buscamos una propiedad del sistema de Java. Si no existe, usamos una por defecto.
         // En Java, las barras hacia adelante (/) funcionan tanto en Windows como en Linux.
-        this.rutaBaseImagenes = System.getProperty("app.ruta.imagenes", "D:/PROYECTOS/utp/tienda-front/src/main/webapp/resources/imagenes");
+        //this.rutaBaseImagenes = System.getProperty("app.ruta.imagenes", "D:/PROYECTOS/utp/tienda-front/src/main/webapp/resources/imagenes");
+        //this.rutaBaseImagenes = System.getProperty("app.ruta.imagenes", rutaImagenes());
         
         System.out.println("====== IMAGE SERVLET INICIALIZADO ======");
         System.out.println("Ruta estática externa configurada: " + this.rutaBaseImagenes);

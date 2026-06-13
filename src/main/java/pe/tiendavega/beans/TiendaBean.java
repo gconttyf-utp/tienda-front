@@ -15,7 +15,6 @@ import pe.tiendavega.consumer.TiendaConsumer;
 import pe.tiendavega.model.dto.TiendaDTO;
 import jakarta.servlet.http.Part;
 import java.io.File;
-import java.nio.file.Paths;
 
 @Named
 @ViewScoped
@@ -35,6 +34,11 @@ public class TiendaBean implements Serializable {
 
     @Inject
     private FacesContext facesContext;
+
+    // CDI busca el @Produces que tenga este nombre exacto
+    @Inject
+    @Named("rutaImagenes")
+    private String directorioDestino;
 
     public List<TiendaDTO> obtenerTiendas(){
         String token = loginBean.getTokenUsuario();
@@ -86,7 +90,8 @@ public class TiendaBean implements Serializable {
 
         try{
             // 1. Obtener la ruta estática externa configurada en el sistema
-            String rutaBase = System.getProperty("app.ruta.imagenes", "D:/PROYECTOS/utp/tienda-front/src/main/webapp/resources/imagenes") + "/tiendas";
+            //String rutaBase = System.getProperty("app.ruta.imagenes", "D:/PROYECTOS/utp/tienda-front/src/main/webapp/resources/imagenes") + "/tiendas";
+            String rutaBase = directorioDestino + "/tiendas";
             File directorio = new File(rutaBase);
             if (!directorio.exists()) {
                 directorio.mkdirs(); // Crea las carpetas físicas si no existen en Windows o Linux
