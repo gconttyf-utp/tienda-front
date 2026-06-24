@@ -54,8 +54,11 @@ public class ProductoDTO {
 
     private Boolean agotado;
 
-    public String getRutaImg() {
-        return rutaImg.replace(" ", "");
+    public Integer getMarcaID() {
+        if (marcaID == null || marcaID == 0) {
+            return 1;
+        }
+        return marcaID;
     }
 
 }

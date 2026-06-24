@@ -1,5 +1,6 @@
 package pe.tiendavega.beans;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import jakarta.servlet.http.Part;
 import pe.tiendavega.consumer.CategoriaConsumer;
 import pe.tiendavega.consumer.DepartamentoConsumer;
 import pe.tiendavega.consumer.GrupoConsumer;
@@ -41,7 +43,7 @@ public class ProductoBean implements Serializable {
     private ProductoConsumer productoConsumer;
 
     @Inject
-    private FacesContext facesContext;
+    private FacesContext facesContext; 
 
     @PostConstruct
     public void init(){
@@ -99,26 +101,82 @@ public class ProductoBean implements Serializable {
             System.out.println("¡ADVERTENCIA! Intentando crear o actualizar producto pero no hay token en la sesión.");
             return "/loginadmin.jsf?faces-redirect=true";
         }
-        
-        ProductoDTO productoDB = null;
 
-        if ( productoDTO.getId() != null && productoDTO.getId() > 0 ){
-            System.out.println("MODIFICAR PRODUCTO : " + productoDTO.getId());
-            productoDB = productoConsumer.actualizarProducto(token, productoDTO.getId(), productoDTO);
-        } else {
-            System.out.println("GRABAR NUEVO PRODUCTO");
-            productoDB = productoConsumer.crearProducto(token, productoDTO);
-        }
-
-        if( productoDB != null ){
-            this.productoDTO = productoDB;
-            if (productoDTO.getId() != null && productoDTO.getId() > 0 ) {
-                facesContext.addMessage(null, new FacesMessage("Producto " + productoDTO.getDescripcion() + " actualizado con exito!"));
-            } else {
-                facesContext.addMessage(null, new FacesMessage("Producto " + productoDTO.getDescripcion() + " creado con exito!"));
+        try{
+            // 1. Obtener la ruta estática externa configurada en el sistema
+            String rutaBase = directorioDestino + "/productos";
+            File directorio = new File(rutaBase);
+            if (!directorio.exists()) {
+                directorio.mkdirs(); // Crea las carpetas físicas si no existen en Windows o Linux
             }
-        } else {
-            facesContext.addMessage(null, new FacesMessage("Error al guardar el producto."));
+            System.out.println("La ruta absoluta del directorio es: " + directorio.getAbsolutePath());
+
+            ProductoDTO productoDB = null;
+
+            // CASO A: EL REGISTRO YA EXISTE (MODIFICAR)
+            if ( productoDTO.getId() != null && productoDTO.getId() > 0 ){
+
+                // Si el usuario seleccionó una nueva imagen, la procesamos
+                if (archivoImagen != null && archivoImagen.getSize() > 0) {
+                    String extension = obtenerExtension(archivoImagen.getSubmittedFileName());
+                    String nuevoNombreImagen = "producto_" + productoDTO.getId() + extension;
+
+                    // Guardado físico en el disco duro
+                    File destino = new File(directorio, nuevoNombreImagen);
+                    archivoImagen.write(destino.getAbsolutePath());
+                    
+                    // Asignamos el nombre final al DTO antes de enviarlo al backend
+                    productoDTO.setRutaImg(nuevoNombreImagen);
+                    System.out.println("El nombre final de la imagen es: " + nuevoNombreImagen);
+                    System.out.println("El destino final de la imagen es: " + destino.getAbsolutePath());
+                    System.out.println("El archivo final de la imagen es: " + archivoImagen.getName());
+                    System.out.println("El nombre final en productoDTO.setRutaImg() ahora es: " + productoDTO.getRutaImg());
+                }
+                
+                System.out.println("MODIFICAR PRODUCTO : " + productoDTO.getId());
+                productoDB = productoConsumer.actualizarProducto(token, productoDTO.getId(), productoDTO);
+            }
+            // CASO B: EL REGISTRO ES NUEVO (CREAR) 
+            else {
+                System.out.println("GRABAR NUEVO PRODUCTO");                
+
+                // Si viene con imagen, le ponemos un nombre temporal inicial
+                String extensionTemporal = "";
+                if (archivoImagen != null && archivoImagen.getSize() > 0) {
+                    extensionTemporal = obtenerExtension(archivoImagen.getSubmittedFileName());
+                    productoDTO.setRutaImg("temp" + extensionTemporal);
+                }
+
+                // Guardamos en la base de datos para OBTENER EL ID autogenerado
+                productoDB = productoConsumer.crearProducto(token, productoDTO);
+
+                // Si la creación fue exitosa y venía un archivo, procedemos al renombrado real
+                if (productoDB != null && productoDB.getId() != null && archivoImagen != null && archivoImagen.getSize() > 0) {
+                    String nuevoNombreImagen = "producto_" + productoDB.getId() + extensionTemporal;
+                    
+                    // Guardado físico con el ID real
+                    File destino = new File(directorio, nuevoNombreImagen);
+                    archivoImagen.write(destino.getAbsolutePath());
+                    
+                    // Actualizamos el objeto en la base de datos con su nombre de imagen definitivo
+                    productoDTO.setRutaImg(nuevoNombreImagen);
+                    productoDB = productoConsumer.actualizarProducto(token, productoDB.getId(), productoDTO);
+                }
+            }
+
+            if( productoDB != null ){
+                this.productoDTO = productoDB;
+                if (productoDTO.getId() != null && productoDTO.getId() > 0 ) {
+                    facesContext.addMessage(null, new FacesMessage("Producto " + productoDTO.getDescripcion() + " actualizado con exito!"));
+                } else {
+                    facesContext.addMessage(null, new FacesMessage("Producto " + productoDTO.getDescripcion() + " creado con exito!"));
+                }
+            } else {
+                facesContext.addMessage(null, new FacesMessage("Error al guardar el producto."));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            facesContext.addMessage(null, new FacesMessage("Error crítico al procesar el archivo: " + e.getMessage()));
         }
 
         facesContext.getExternalContext().getFlash().setKeepMessages(true);
@@ -224,6 +282,30 @@ public class ProductoBean implements Serializable {
 
     public void setCategoriaId(Integer categoriaId) {
         this.categoriaId = categoriaId;
+    }
+
+    // CDI busca el @Produces que tenga este nombre exacto
+    @Inject
+    @Named("rutaImagenes")
+    private String directorioDestino;
+
+    private Part archivoImagen; // Aquí JSF inyectará el archivo binario seleccionado
+
+    // Getters y Setters obligatorios
+    public Part getArchivoImagen() {
+        return archivoImagen;
+    }
+
+    public void setArchivoImagen(Part archivoImagen) {
+        this.archivoImagen = archivoImagen;
+    }
+
+    // Método utilitario para extraer la extensión (.jpg, .png, .webp, etc.)
+    private String obtenerExtension(String nombreArchivo) {
+        if (nombreArchivo == null || !nombreArchivo.contains(".")) {
+            return ".webp"; // Por defecto si no se detecta
+        }
+        return nombreArchivo.substring(nombreArchivo.lastIndexOf("."));
     }
 
 }

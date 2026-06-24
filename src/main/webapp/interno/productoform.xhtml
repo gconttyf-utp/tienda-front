@@ -19,7 +19,7 @@
                 <h:outputText value="#{productoDTO.id > 0 ? 'Editar' : 'Crear'} Producto"/>
             </f:facet>
 
-            <h:form id="formulario">
+            <h:form id="formulario" enctype="multipart/form-data">
                 <h:panelGrid columns="2" class="table table-hover table-striped">
                     <h:outputLabel value="Descripción" for="descripcion" class="col-form-label"/>
                     <h:inputText id="descripcion" value="#{productoDTO.descripcion}" label="Descripción" class="form-control" jsf:placeholder="Arroz Costeno Superior 5kg"/>
@@ -44,6 +44,55 @@
                         <f:selectItems value="#{productoBean.categorias(productoBean.grupoId)}" var="cat" itemLabel="#{cat.nombre}" itemValue="#{cat.id}"/>
                     </h:selectOneMenu>
 
+                    <h:outputLabel value="SKU" for="sku" class="col-form-label"/>
+                    <h:inputText id="sku" value="#{productoDTO.sku}" label="SKU" class="form-control" jsf:placeholder="SKU001"/>
+
+                    <h:outputLabel value="Precio Lista" for="precio1" class="col-form-label"/>
+                    <h:inputText id="precio1" value="#{productoDTO.precioLista}" label="Precio Lista" class="form-control" jsf:placeholder="10.50" converter="jakarta.faces.Double"/>
+
+                    <h:outputLabel value="Precio Online" for="precio2" class="col-form-label"/>
+                    <h:inputText id="precio2" value="#{productoDTO.precioOnline}" label="Precio Online" class="form-control" jsf:placeholder="9.50" converter="jakarta.faces.Double"/>
+
+                    <h:outputLabel value="Stock" for="stock" class="col-form-label"/>
+                    <h:inputText id="stock" value="#{productoDTO.stock}" label="Stock" class="form-control" jsf:placeholder="10" converter="jakarta.faces.Integer"/>
+
+                    <h:outputLabel value="Imagen" for="fileUpload" class="col-form-label"/>
+                    <h:panelGroup layout="block" class="input-group">
+                        <span class="input-group-text bg-light text-secondary font-monospace small" style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                            #{empty productoDTO.rutaImg ? 'Sin imagen' : productoDTO.rutaImg}
+                        </span>
+                        <h:inputFile id="fileUpload" value="#{productoBean.archivoImagen}" class="form-control" />
+                    </h:panelGroup>
+
+                    <h:outputLabel value="Slug" for="slug" class="col-form-label"/>
+                    <h:inputText id="slug" value="#{productoDTO.slug}" label="Slug" class="form-control" jsf:placeholder="slug"/>
+
+                    <h:outputLabel value="Unidad" for="unidad" class="col-form-label"/>
+                    <h:inputText id="unidad" value="#{productoDTO.unidad}" label="Unidad" class="form-control" jsf:placeholder="Unidad"/>
+
+                    <h:outputLabel value="Color" for="color" class="col-form-label"/>
+                    <h:inputText id="color" value="#{productoDTO.colorPlaceholder}" label="Color" class="form-control" jsf:placeholder="#F4F6F8"/>
+
+                    <h:outputLabel value="Descripcion Larga" for="descripcionLarga" class="col-form-label"/>
+                    <h:inputTextarea id="descripcionLarga" value="#{productoDTO.descripcionLarga}" label="Descripcion Larga" class="form-control" jsf:placeholder="Descripcion Larga"/>
+
+                    <h:outputLabel value="Oferta" for="oferta" class="col-form-label"/>
+                    <h:selectOneMenu id="oferta" value="#{productoDTO.oferta}" class="form-select">
+                        <f:selectItem itemValue="1" itemLabel="Si"/>
+                        <f:selectItem itemValue="0" itemLabel="No"/>
+                    </h:selectOneMenu>
+
+                    <h:outputLabel value="Destacado" for="destacado" class="col-form-label"/>
+                    <h:selectOneMenu id="destacado" value="#{productoDTO.destacado}" class="form-select">
+                        <f:selectItem itemValue="1" itemLabel="Si"/>
+                        <f:selectItem itemValue="0" itemLabel="No"/>
+                    </h:selectOneMenu>
+
+                    <h:outputLabel value="Fecha Creación" for="createdAt" class="col-form-label"/>
+                    <h:outputText id="createdAt" value="#{productoDTO.createdAt}" label="Fecha Creación" class="form-control">
+                        <f:convertDateTime type="localDateTime" pattern="yyyy-MM-dd HH:mm:ss" />
+                    </h:outputText>
+
                     <h:outputLabel value="Estado" for="estado" class="col-form-label"/>
                     <h:selectOneMenu id="estado" value="#{productoDTO.estado}" class="form-select">
                         <f:selectItem itemValue="1" itemLabel="Activo"/>
@@ -55,6 +104,23 @@
                     
                     <h:inputHidden value="#{productoDTO.id}"/>
                     <h:outputText value="" />
+
+                    <f:facet name="footer">
+                        <div class="text-center mt-4 p-3 bg-light rounded">
+                            
+                            <h:graphicImage value="/media/productos/#{productoDTO.rutaImg}" 
+                                            rendered="#{not empty productoDTO.rutaImg}" 
+                                            class="img-fluid img-thumbnail shadow-sm" 
+                                            style="max-height: 250px; object-fit: contain;"/>
+                            
+                            <h:panelGroup rendered="#{empty productoDTO.rutaImg}">
+                                <span class="text-muted fst-italic">
+                                    <i class="bi bi-image me-2"></i> No hay imagen disponible para este producto
+                                </span>
+                            </h:panelGroup>
+                            
+                        </div>
+                    </f:facet>
 
                 </h:panelGrid>
             </h:form>

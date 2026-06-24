@@ -32,9 +32,5 @@ public class TiendaDTO {
     private Double longitud;
 
     private String nombreUbigeo;
-    
-    public String getImagenUrl() {
-        return imagenUrl.replace(" ", "");
-    }
 
 }
