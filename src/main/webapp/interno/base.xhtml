@@ -45,11 +45,17 @@
                                     <li><h:link outcome="producto.xhtml" value="Productos" styleClass="dropdown-item" /></li>
                                 </ul>
                             </li>
-                            <li class="nav-item">
-                                <h:link outcome="departamento.xhtml" value="Departamentos" styleClass="nav-link" />
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Usuarios
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><h:link outcome="rol.xhtml" value="Roles" styleClass="dropdown-item" /></li>
+                                    <li><h:link outcome="usuario.xhtml" value="Usuarios" styleClass="dropdown-item" /></li>
+                                </ul>
                             </li>
                             <li class="nav-item">
-                                <h:link outcome="grupo.xhtml" value="Grupos" styleClass="nav-link" />
+                                <h:link outcome="cliente.xhtml" value="Clientes" styleClass="nav-link" />
                             </li>
                             <li class="nav-item">
                                 <h:link outcome="categoria.xhtml" value="Categorias" styleClass="nav-link" />
