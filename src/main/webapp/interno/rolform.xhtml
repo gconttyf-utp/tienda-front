@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<ui:composition template="base.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:jsf="jakarta.faces.passthrough"
+                xmlns:ui="jakarta.faces.facelets">
+    
+    <ui:define name="content">
+        
+        <f:metadata>
+            <f:viewParam name="id" value="#{rolBean.id}"/>
+        </f:metadata>
+
+        <h:panelGrid border="1" class="table">
+            <f:facet name="header">
+                <h:outputText value="#{rolDTO.id > 0 ? 'Editar' : 'Crear'} Rol"/>
+            </f:facet>
+
+            <h:form id="formRol">
+                <h:panelGrid columns="2" class="table table-hover table-striped">
+                    <h:outputLabel value="Nombre" for="nombre" class="col-form-label"/>
+                    <h:inputText id="nombre" value="#{rolDTO.descripcion}" label="Nombre" class="form-control" jsf:placeholder="Ejemplo: Admin"/>
+
+                    <h:outputLabel value="Estado" for="estado" class="col-form-label"/>
+                    <h:selectOneMenu id="estado" value="#{rolDTO.estado}" class="form-select">
+                        <f:selectItem itemValue="1" itemLabel="Activo"/>
+                        <f:selectItem itemValue="0" itemLabel="Inactivo"/>
+                    </h:selectOneMenu>
+
+                    <h:commandButton value="#{rolDTO.id>0 ? 'Guardar Cambios': 'Crear'}" action="#{rolBean.procesar}" class="btn btn-primary"/>
+                    <h:link value="Cancelar" outcome="rol" class="btn btn-primary"/>
+                    
+                    <h:inputHidden value="#{rolDTO.id}"/>
+                    <h:outputText value="" />
+
+                </h:panelGrid>
+            </h:form>
+
+        </h:panelGrid>            
+        
+    </ui:define>
+
+</ui:composition>

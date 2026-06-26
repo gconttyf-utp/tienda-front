@@ -57,14 +57,33 @@
                             <li class="nav-item">
                                 <h:link outcome="cliente.xhtml" value="Clientes" styleClass="nav-link" />
                             </li>
-                            <li class="nav-item">
-                                <h:link outcome="categoria.xhtml" value="Categorias" styleClass="nav-link" />
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Almacenes
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><h:link outcome="almacen.xhtml" value="Activar Almacén" styleClass="dropdown-item" /></li>
+                                    <li><h:link outcome="abastecimiento.xhtml" value="Abastecimiento" styleClass="dropdown-item" /></li>
+                                </ul>
                             </li>
                             <li class="nav-item">
-                                <h:link outcome="marca.xhtml" value="Marcas" styleClass="nav-link" />
+                                <h:link outcome="despacho.xhtml" value="Despacho" styleClass="nav-link" />
                             </li>
                             <li class="nav-item">
-                                <h:link outcome="producto.xhtml" value="Productos" styleClass="nav-link" />
+                                <h:link outcome="seguimiento.xhtml" value="Seguimiento de Pedidos" styleClass="nav-link" />
+                            </li>
+                            <li class="nav-item">
+                                <h:link outcome="reclamo.xhtml" value="Reclamos" styleClass="nav-link" />
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Reportes
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><h:link outcome="diario.xhtml" value="Reporte Diario" styleClass="dropdown-item" /></li>
+                                    <li><h:link outcome="semanal.xhtml" value="Reporte Semanal" styleClass="dropdown-item" /></li>
+                                    <li><h:link outcome="mensual.xhtml" value="Reporte Mensual" styleClass="dropdown-item" /></li>
+                                </ul>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link disabled" aria-disabled="true">Ventas</a>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<ui:composition template="base.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:jsf="jakarta.faces.passthrough"
+                xmlns:ui="jakarta.faces.facelets">
+    
+    <f:metadata>
+        <f:viewParam name="id" value="#{usuarioBean.id}"/>
+    </f:metadata>
+
+    <ui:define name="content">
+        
+        <h:panelGrid border="1" class="table">
+            <f:facet name="header">
+                <h:outputText value="#{usuarioDTO.id > 0 ? 'Editar' : 'Crear'} Usuario"/>
+            </f:facet>
+
+            <h:form id="formulario">
+                <h:panelGrid columns="2" class="table table-hover table-striped">
+                    <h:outputLabel value="Nombre" for="nombre" class="col-form-label"/>
+                    <h:inputText id="nombre" value="#{usuarioDTO.nombres}" label="Nombre" class="form-control" jsf:placeholder="Nombres"/>
+
+                    <h:outputLabel value="Apellido" for="apellido" class="col-form-label"/>
+                    <h:inputText id="apellido" value="#{usuarioDTO.apellidos}" label="Apellido" class="form-control" jsf:placeholder="Apellidos"/>
+
+                    <h:outputLabel value="Email" for="email" class="col-form-label"/>
+                    <h:inputText id="email" value="#{usuarioDTO.usuario}" readonly="#{usuarioDTO.id > 0}" label="Email" class="form-control" jsf:placeholder="noemail@tiendavega.pe"/>
+
+                    <h:outputLabel value="Password" for="password" class="col-form-label"/>
+                    <h:inputSecret id="password" value="#{usuarioDTO.clave}" redisplay="true" readonly="#{usuarioDTO.id > 0}" label="Password" class="form-control" jsf:placeholder="Password"/>
+
+                    <h:outputLabel value="Rol" for="rol" class="col-form-label"/>
+                    <h:selectOneMenu id="rol" value="#{usuarioDTO.rolId}" class="form-select" converter="jakarta.faces.Integer">
+                        <f:selectItem itemLabel="--- seleccione un rol ---" itemValue="#{null}" noSelectionOption="true" />
+                        <f:selectItems value="#{usuarioBean.roles}" var="rol" itemLabel="#{rol.descripcion}" itemValue="#{rol.id}"/>
+                    </h:selectOneMenu>
+
+                    <h:outputLabel value="Estado" for="estado" class="col-form-label"/>
+                    <h:selectOneMenu id="estado" value="#{usuarioDTO.estado}" class="form-select">
+                        <f:selectItem itemValue="1" itemLabel="Activo"/>
+                        <f:selectItem itemValue="0" itemLabel="Inactivo"/>
+                    </h:selectOneMenu>
+
+                    <h:commandButton value="#{usuarioDTO.id>0 ? 'Guardar Cambios': 'Crear'}" action="#{usuarioBean.procesar}" class="btn btn-primary"/>
+                    <h:link value="Cancelar" outcome="usuario.xhtml?faces-redirect=true" class="btn btn-primary"/>
+                    
+                    <h:inputHidden value="#{usuarioDTO.id}"/>
+                    <h:outputText value="" />
+
+                </h:panelGrid>
+            </h:form>
+
+        </h:panelGrid>            
+        
+    </ui:define>
+
+</ui:composition>

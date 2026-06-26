@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<ui:composition template="base.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:jsf="jakarta.faces.passthrough"
+                xmlns:ui="jakarta.faces.facelets">
+    
+    <ui:define name="content">
+        
+        <h:panelGrid border="1" class="table">
+            <f:facet name="header">
+                <div class="d-flex align-items-center gap-3">
+                    <h:outputText value="#{usuarioBean.titulo}" class="m-0 fs-5 fw-bold"/>
+
+                    <h:button value="Agregar Usuario" outcome="usuarioform" class="btn btn-primary btn-sm text-nowrap ms-auto" />
+                </div>
+            </f:facet>
+        
+            <h:panelGroup id="tablaUsuariosPanel" layout="block">
+                <h:outputText value="No existen usuarios en la base de datos!" rendered="#{empty usuarioBean.obtenerUsuarios()}"
+                            class="alert alert-warning d-block my-2"/>
+                <h:dataTable var="t" value="#{usuarioBean.obtenerUsuarios()}" rendered="#{not empty usuarioBean.obtenerUsuarios()}" 
+                            class="table table-hover table-striped" id="tablaUsuarios">
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Id"/>
+                        </f:facet>
+                        <h:outputText value="#{t.id}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Nombres"/>
+                        </f:facet>
+                        <h:outputText value="#{t.nombres}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Apellidos"/>
+                        </f:facet>
+                        <h:outputText value="#{t.apellidos}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Usuario"/>
+                        </f:facet>
+                        <h:outputText value="#{t.usuario}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Rol"/>
+                        </f:facet>
+                        <h:outputText value="#{usuarioBean.nombreRol(t.rolId)}"/>
+                    </h:column> 
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Estado"/>
+                        </f:facet>
+                        <h:outputText value="#{t.estado eq 1 ? 'Activo' : 'Inactivo'}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Editar"/>
+                        </f:facet>
+                        <h:link value="Editar" outcome="usuarioform" class="btn btn-sm btn-info">
+                            <f:param name="id" value="#{t.id}"/>
+                        </h:link>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Cambiar Clave"/>
+                        </f:facet>
+                        <h:link value="Cambiar Clave" outcome="usuarioclaveform" class="btn btn-sm btn-info">
+                            <f:param name="id" value="#{t.id}"/>
+                        </h:link>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Cambiar Estado"/>
+                        </f:facet>
+                        <h:form id="eliminarForm">
+                            <h:commandLink value="#{t.estado eq 1 ? 'Inactivar' : 'Activar'}" action="#{usuarioBean.cambiarEstado(t)}"
+                                        class="btn btn-sm #{t.estado eq 1 ? 'btn-danger' : 'btn-success'}"
+                                        onclick="return confirm('esta seguro que desea cambiar el estado?')"/>
+                        </h:form>
+                    </h:column>
+                </h:dataTable>
+            </h:panelGroup>
+        </h:panelGrid>            
+        
+    </ui:define>
+
+</ui:composition>
