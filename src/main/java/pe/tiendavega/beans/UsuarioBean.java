@@ -38,7 +38,7 @@ public class UsuarioBean implements Serializable {
 
     @PostConstruct
     public void init(){
-        this.titulo = "Listado de Grupos por Departamento ";
+        this.titulo = "Listado de Usuarios ";
     }
 
     @Produces

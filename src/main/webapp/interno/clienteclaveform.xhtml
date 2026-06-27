@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<ui:composition template="base.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:jsf="jakarta.faces.passthrough"
+                xmlns:ui="jakarta.faces.facelets">
+    
+    <f:metadata>
+        <f:viewParam name="id" value="#{clienteBean.id}"/>
+    </f:metadata>
+
+    <ui:define name="content">
+        
+        <h:panelGrid border="1" class="table">
+            <f:facet name="header">
+                <h:outputText value="Cambiar Clave del Cliente"/>
+            </f:facet>
+
+            <h:form id="formulario">
+                <h:panelGrid columns="2" class="table table-hover table-striped">
+                    <h:outputLabel value="Nombre" for="nombre" class="col-form-label"/>
+                    <h:inputText id="nombre" value="#{clienteDTO.nombres}" readonly="true" label="Nombre" class="form-control" jsf:placeholder="Nombres"/>
+
+                    <h:outputLabel value="Apellido" for="apellido" class="col-form-label"/>
+                    <h:inputText id="apellido" value="#{clienteDTO.apellidos}" readonly="true" label="Apellido" class="form-control" jsf:placeholder="Apellidos"/>
+
+                    <h:outputLabel value="Email" for="email" class="col-form-label"/>
+                    <h:inputText id="email" value="#{clienteDTO.correo}" readonly="#{clienteDTO.id > 0}" label="Email" class="form-control" jsf:placeholder="noemail@tiendavega.pe"/>
+
+                    <h:outputLabel value="Nueva Clave" for="password" class="col-form-label"/>
+                    <h:inputSecret id="password" value="#{clienteDTO.clave}" label="Password" class="form-control" jsf:placeholder="Password"/>
+
+                    <h:commandButton value="Cambiar Clave" action="#{clienteBean.cambiarClave}" class="btn btn-primary"/>
+                    <h:link value="Cancelar" outcome="cliente.xhtml?faces-redirect=true" class="btn btn-primary"/>
+                    
+                    <h:inputHidden value="#{clienteDTO.id}"/>
+                    <h:outputText value="" />
+
+                </h:panelGrid>
+            </h:form>
+
+        </h:panelGrid>            
+        
+    </ui:define>
+
+</ui:composition>

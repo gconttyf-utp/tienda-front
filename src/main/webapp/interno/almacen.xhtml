@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<ui:composition template="base.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:jsf="jakarta.faces.passthrough"
+                xmlns:ui="jakarta.faces.facelets">
+    
+    <ui:define name="content">
+        
+        <h:panelGrid border="1" class="table">
+            <f:facet name="header">
+                <div class="d-flex align-items-center gap-3">
+                    <h:outputText value="#{almacenBean.titulo}" class="m-0 fs-5 fw-bold"/>
+                </div>
+            </f:facet>
+        
+            <h:panelGroup id="tablaGruposPanel" layout="block">
+                <h:outputText value="No existen almacenes en la base de datos!" rendered="#{empty almacenBean.obtenerAlmacenesNoActivadas()}"
+                            class="alert alert-warning d-block my-2"/>
+                <h:dataTable var="t" value="#{almacenBean.obtenerAlmacenesNoActivadas()}" rendered="#{not empty almacenBean.obtenerAlmacenesNoActivadas()}" 
+                            class="table table-hover table-striped" id="tablaGrupos">
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Id"/>
+                        </f:facet>
+                        <h:outputText value="#{t.id}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Nombre"/>
+                        </f:facet>
+                        <h:outputText value="#{t.nombre}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Direccion"/>
+                        </f:facet>
+                        <h:outputText value="#{t.direccion}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Departamento"/>
+                        </f:facet>
+                        <h:outputText value="#{almacenBean.nombreDepartamento(t.codUbigeo)}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Provincia"/>
+                        </f:facet>
+                        <h:outputText value="#{almacenBean.nombreProvincia(t.codUbigeo)}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Distrito"/>
+                        </f:facet>
+                        <h:outputText value="#{almacenBean.nombreDistrito(t.codUbigeo)}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Activar"/>
+                        </f:facet>
+                        <h:link value="Activar" outcome="almacenform" class="btn btn-sm btn-info">
+                            <f:param name="tiendaId" value="#{t.id}"/>
+                            <f:param name="codubigeo" value="#{t.codUbigeo}"/>
+                        </h:link>
+                    </h:column>
+                </h:dataTable>
+            </h:panelGroup>
+        </h:panelGrid>            
+        
+    </ui:define>
+
+</ui:composition>
