@@ -16,7 +16,7 @@ import pe.tiendavega.model.dto.TiendaDTO;
 @ApplicationScoped
 public class AlmacenConsumer {
 
-    public List<TiendaDTO> obtenerTiendasSinAlmacenes(String tokenUsuario, Integer activadas) {
+    public List<TiendaDTO> obtenerTiendasAlmacenes(String tokenUsuario, Integer activadas) {
         try (Client client = ClientBuilder.newClient()) {
 
             WebTarget target = client.target(RutasConsumer.ENDPOINT_USUARIO + "/almacenes/tiendas");

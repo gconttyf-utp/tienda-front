@@ -58,7 +58,7 @@ public class AlmacenBean implements Serializable {
             System.out.println("¡ADVERTENCIA! Intentando obtener almacenes pero no hay token en la sesión.");
             return java.util.Collections.emptyList();
         }
-        return almacenConsumer.obtenerTiendasSinAlmacenes(token, 0);
+        return almacenConsumer.obtenerTiendasAlmacenes(token, 0);
     }
 
     public String procesar(){
