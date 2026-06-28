@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<ui:composition template="base.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:jsf="jakarta.faces.passthrough"
+                xmlns:ui="jakarta.faces.facelets">
+    
+    <ui:define name="content">
+        
+        <h:panelGrid border="1" class="table">
+            <f:facet name="header">
+                <div class="d-flex align-items-center gap-3">
+                    <h:outputText value="#{abastecimientoBean.tituloAbastecimiento}" class="m-0 fs-5 fw-bold"/>
+
+                    <h:form id="filtroForm" class="m-0 p-0 d-flex align-items-center gap-3 flex-grow-1">
+                        <h:selectOneMenu id="tiendaSelect" value="#{abastecimientoBean.tiendaId}" class="form-select w-auto" converter="jakarta.faces.Integer">
+                            <f:selectItem itemLabel="--- seleccione una tienda ---" itemValue="#{null}"/>
+                            <f:selectItems value="#{abastecimientoBean.obtenerAlmacenesActivadas()}" var="tienda" itemLabel="#{tienda.nombre}" itemValue="#{tienda.id}"/>
+                            <!-- f:ajax renderiza el contenedor panelGroup que agrupa la tabla y el mensaje vacío -->
+                            <f:ajax execute="@this" render=":tablaAbastecimientoPanel botonAgregar" />
+                        </h:selectOneMenu>
+
+                        <h:button id="botonAgregar" value="Agregar Producto" outcome="abastecimientoform" class="btn btn-primary btn-sm text-nowrap ms-auto" 
+                                  onclick="var select = document.getElementById('filtroForm:tiendaSelect'); if (!select.value) { alert('Debe Seleccionar Primero una Tienda'); return false; }">
+                            <f:param name="tiendaId" value="#{empty abastecimientoBean.tiendaId ? '' : abastecimientoBean.tiendaId}" disable="#{empty abastecimientoBean.tiendaId}" />
+                            <f:param name="codubigeo" value="#{empty abastecimientoBean.tiendaId ? '' : abastecimientoBean.codigoUbigeoTienda(abastecimientoBean.tiendaId)}" disable="#{empty abastecimientoBean.tiendaId}" />
+                        </h:button>
+                    </h:form>
+                </div>
+            </f:facet>
+        
+            <h:panelGroup id="tablaAbastecimientoPanel" layout="block">
+                <h:outputText value="No existen almacenes en la base de datos!" rendered="#{empty abastecimientoBean.obtenerAbastecimiento()}"
+                            class="alert alert-warning d-block my-2"/>
+                <h:dataTable var="t" value="#{abastecimientoBean.obtenerAbastecimiento()}" rendered="#{not empty abastecimientoBean.obtenerAbastecimiento()}" 
+                            class="table table-hover table-striped" id="tablaGrupos">
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Id"/>
+                        </f:facet>
+                        <h:outputText value="#{t.productoId}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Nombre"/>
+                        </f:facet>
+                        <h:outputText value="#{t.productoId}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Direccion"/>
+                        </f:facet>
+                        <h:outputText value="#{t.productoId}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Departamento"/>
+                        </f:facet>
+                        <h:outputText value="#{t.productoId}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Provincia"/>
+                        </f:facet>
+                        <h:outputText value="#{t.productoId}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Stock"/>
+                        </f:facet>
+                        <h:outputText value="#{t.cantidad}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Acción"/>
+                        </f:facet>
+                        <h:link value="Agregar Stock" outcome="abastecimientoform" class="btn btn-sm btn-info">
+                            <f:param name="tiendaId" value="#{t.tiendaId}"/>
+                            <f:param name="codubigeo" value="#{abastecimientoBean.codigoUbigeoTienda(t.tiendaId)}"/>
+                        </h:link>
+                    </h:column>
+                </h:dataTable>
+            </h:panelGroup>
+        </h:panelGrid>            
+        
+    </ui:define>
+
+</ui:composition>

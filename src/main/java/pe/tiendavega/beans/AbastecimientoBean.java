@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.util.List;
 
 import jakarta.annotation.PostConstruct;
-import jakarta.enterprise.inject.Model;
-import jakarta.enterprise.inject.Produces;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
@@ -20,7 +18,7 @@ import pe.tiendavega.model.dto.TiendaDTO;
 
 @Named
 @ViewScoped
-public class AlmacenBean implements Serializable {
+public class AbastecimientoBean implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -46,21 +44,21 @@ public class AlmacenBean implements Serializable {
         this.tituloAbastecimiento = "Listado Abastecimiento de Almacenes";
     }
 
-    @Produces
+    /*@Produces
     @Model
     public AlmacenDTO almacenDTO() {
         this.almacenDTO = new AlmacenDTO();
         almacenDTO.setTiendaId(tiendaId);
         return this.almacenDTO;
-    }
+    }*/
 
-    public List<TiendaDTO> obtenerAlmacenesNoActivadas(){
+    public List<AlmacenDTO> obtenerAbastecimiento(){
         String token = loginBean.getTokenUsuario();
         if (token == null || token.isEmpty()) {
             System.out.println("¡ADVERTENCIA! Intentando obtener almacenes pero no hay token en la sesión.");
             return java.util.Collections.emptyList();
         }
-        return almacenConsumer.obtenerTiendasAlmacenes(token, 0);
+        return almacenConsumer.obtenerAlmacenesAcumuladas(token, this.tiendaId);
     }
 
     public List<TiendaDTO> obtenerAlmacenesActivadas(){

@@ -68,7 +68,7 @@
                     <h:inputText id="cantidad" value="#{almacenDTO.cantidad}" label="Cantidad" class="form-control" jsf:placeholder="10" converter="jakarta.faces.Integer"/>
 
                     <h:commandButton value="#{almacenDTO.id>0 ? 'Guardar Cambios': 'Activar'}" action="#{almacenBean.procesar}" class="btn btn-primary"/>
-                    <h:link value="Cancelar" outcome="almacen.xhtml" class="btn btn-primary"/>
+                    <h:link value="Cancelar" outcome="abastecimiento.xhtml" class="btn btn-primary"/>
                     
                     <h:inputHidden value="#{almacenDTO.tiendaId}"/>
                     <h:inputHidden value="#{almacenDTO.id}"/>
