@@ -164,7 +164,9 @@ public class AlmacenBean implements Serializable {
     public void alCambiarCategoria() {
         // 1. Limpiamos solo la variable hija directa
         //this.productoId = null;
-        this.almacenDTO.setProductoId(null);
+        if (this.almacenDTO != null) {
+            this.almacenDTO.setProductoId(null);
+        }
         
         // 2. Opcional: Limpiar la tabla
         // this.listaProductos = null;

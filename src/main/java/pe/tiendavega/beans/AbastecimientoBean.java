@@ -4,12 +4,17 @@ import java.io.Serializable;
 import java.util.List;
 
 import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.inject.Model;
+import jakarta.enterprise.inject.Produces;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import pe.tiendavega.consumer.AlmacenConsumer;
+import pe.tiendavega.consumer.CategoriaConsumer;
+import pe.tiendavega.consumer.DepartamentoConsumer;
+import pe.tiendavega.consumer.GrupoConsumer;
 import pe.tiendavega.consumer.PublicoConsumer;
 import pe.tiendavega.consumer.TiendaConsumer;
 import pe.tiendavega.model.dto.AlmacenDTO;
@@ -25,6 +30,7 @@ public class AbastecimientoBean implements Serializable {
     private Integer id;
     private Integer tiendaId;
     private String codUbigeo;
+    private Integer productoId;
     private AlmacenDTO almacenDTO;
     private String titulo;
     private String tituloAbastecimiento;
@@ -44,13 +50,14 @@ public class AbastecimientoBean implements Serializable {
         this.tituloAbastecimiento = "Listado Abastecimiento de Almacenes";
     }
 
-    /*@Produces
-    @Model
-    public AlmacenDTO almacenDTO() {
+    @Produces
+    @Named("abastecimientoDTO")
+    @jakarta.enterprise.context.RequestScoped
+    public AlmacenDTO abastecimientoDTO() {
         this.almacenDTO = new AlmacenDTO();
         almacenDTO.setTiendaId(tiendaId);
         return this.almacenDTO;
-    }*/
+    }
 
     public List<AlmacenDTO> obtenerAbastecimiento(){
         String token = loginBean.getTokenUsuario();
@@ -99,7 +106,7 @@ public class AbastecimientoBean implements Serializable {
         }
 
         facesContext.getExternalContext().getFlash().setKeepMessages(true);
-        return "/interno/almacen.jsffaces-redirect=true";
+        return "/interno/abastecimiento.jsf?tiendaId=" + almacenDTO.getTiendaId() + "&faces-redirect=true";
     }
 
     public String getTitulo() {
@@ -134,6 +141,14 @@ public class AbastecimientoBean implements Serializable {
         this.codUbigeo = codUbigeo;
     }
 
+    public Integer getProductoId() {
+        return productoId;
+    }
+
+    public void setProductoId(Integer productoId) {
+        this.productoId = productoId;
+    }
+
     @Inject
     private PublicoConsumer publicoConsumer;
 
@@ -158,11 +173,59 @@ public class AbastecimientoBean implements Serializable {
         return publicoConsumer.obtenerProductosPorCategoria(categoria);
     }
 
+    @Inject
+    private GrupoConsumer grupoConsumer;
+    
+    public Integer idDepartamento(Integer idProducto){
+        Integer categoria = publicoConsumer.obtenerProducto(idProducto).getCategoriaID();
+        Integer grupo = categoriaConsumer.obtenerCategoria(loginBean.getTokenUsuario(), categoria).getGrupoId();
+        return grupoConsumer.obtenerGrupo(loginBean.getTokenUsuario(), grupo).getDepartamentoId();
+    }    
+
+    @Inject
+    private CategoriaConsumer categoriaConsumer;
+
+    public Integer idGrupo(Integer idProducto){
+        Integer categoria = publicoConsumer.obtenerProducto(idProducto).getCategoriaID();
+        return categoriaConsumer.obtenerCategoria(loginBean.getTokenUsuario(), categoria).getGrupoId();
+    }
+
+    public Integer idCategoria(Integer idProducto){
+        return publicoConsumer.obtenerProducto(idProducto).getCategoriaID();
+    }
+
+    public String descripcionProducto(Integer idProducto){
+        return publicoConsumer.obtenerProducto(idProducto).getDescripcion();
+    }
+
+    @Inject
+    private DepartamentoConsumer departamentoConsumer;
+
+    public String nombreDepartamento(Integer idProducto){
+        Integer categoria = publicoConsumer.obtenerProducto(idProducto).getCategoriaID();
+        Integer grupo = categoriaConsumer.obtenerCategoria(loginBean.getTokenUsuario(), categoria).getGrupoId();
+        Integer departamento = grupoConsumer.obtenerGrupo(loginBean.getTokenUsuario(), grupo).getDepartamentoId();
+        return departamentoConsumer.obtenerDepartamento(loginBean.getTokenUsuario(), departamento).getNombre();
+    }
+
+    public String nombreGrupo(Integer idProducto){
+        Integer categoria = publicoConsumer.obtenerProducto(idProducto).getCategoriaID();
+        Integer grupo = categoriaConsumer.obtenerCategoria(loginBean.getTokenUsuario(), categoria).getGrupoId();
+        return grupoConsumer.obtenerGrupo(loginBean.getTokenUsuario(), grupo).getNombre();
+    }
+
+    public String nombreCategoria(Integer idProducto){
+        Integer categoria = publicoConsumer.obtenerProducto(idProducto).getCategoriaID();
+        return categoriaConsumer.obtenerCategoria(loginBean.getTokenUsuario(), categoria).getNombre();
+    }
+
     // Método que se ejecuta al cambiar el Grupo
     public void alCambiarCategoria() {
         // 1. Limpiamos solo la variable hija directa
         //this.productoId = null;
-        this.almacenDTO.setProductoId(null);
+        if (this.almacenDTO != null) {
+            this.almacenDTO.setProductoId(null);
+        }
         
         // 2. Opcional: Limpiar la tabla
         // this.listaProductos = null;
@@ -192,6 +255,34 @@ public class AbastecimientoBean implements Serializable {
             return "---";
         }
         return tiendaConsumer.obtenerTienda(loginBean.getTokenUsuario(), id).getCodUbigeo();
+    }
+
+    private Integer departamentoId;
+    private Integer grupoId;
+    private Integer categoriaId;
+
+    public Integer getDepartamentoId() {
+        return departamentoId;
+    }
+
+    public void setDepartamentoId(Integer departamentoId) {
+        this.departamentoId = departamentoId;
+    }
+
+    public Integer getGrupoId() {
+        return grupoId;
+    }
+
+    public void setGrupoId(Integer grupoId) {
+        this.grupoId = grupoId;
+    }
+
+    public Integer getCategoriaId() {
+        return categoriaId;
+    }
+
+    public void setCategoriaId(Integer categoriaId) {
+        this.categoriaId = categoriaId;
     }
 
 }

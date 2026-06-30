@@ -7,35 +7,34 @@
                 xmlns:ui="jakarta.faces.facelets">
     
     <f:metadata>
-        <f:viewParam name="id" value="#{almacenBean.id}"/>
-        <f:viewParam name="tiendaId" value="#{almacenBean.tiendaId}"/>
-        <f:viewParam name="codubigeo" value="#{almacenBean.codUbigeo}"/>
+        <f:viewParam name="tiendaId" value="#{abastecimientoDTO.tiendaId}"/>
+        <f:viewParam name="codubigeo" value="#{abastecimientoBean.codUbigeo}"/>
         <f:viewParam name="depa" value="#{productoBean.departamentoId}"/>
         <f:viewParam name="grupo" value="#{productoBean.grupoId}"/>
         <f:viewParam name="cate" value="#{productoBean.categoriaId}"/>
-        <f:viewParam name="prod" value="#{almacenDTO.productoId}"/>
+        <f:viewParam name="prod" value="#{abastecimientoDTO.productoId}"/>
     </f:metadata>
 
     <ui:define name="content">
         
         <h:panelGrid border="1" class="table">
             <f:facet name="header">
-                <h:outputText value="#{almacenDTO.id > 0 ? 'Editar' : 'Activar'} Almacen"/>
+                <h:outputText value="Abastecer Almacen"/>
             </f:facet>
 
             <h:form id="formulario">
                 <h:panelGrid columns="2" class="table table-hover table-striped">
                     <h:outputLabel value="Tienda" for="tienda" class="col-form-label"/>
-                    <h:outputText id="tienda" value="#{almacenDTO.tiendaId}" class="form-control"/>
+                    <h:outputText id="tienda" value="#{abastecimientoDTO.tiendaId}" class="form-control"/>
 
                     <h:outputLabel value="Tienda" for="tienda" class="col-form-label"/>
-                    <h:outputText value="#{almacenBean.nombreTienda(almacenDTO.tiendaId)}" class="form-control"/>
+                    <h:outputText value="#{abastecimientoBean.nombreTienda(abastecimientoDTO.tiendaId)}" class="form-control"/>
 
                     <h:outputLabel value="Dirección" for="direccion" class="col-form-label"/>
-                    <h:outputText value="#{almacenBean.nombreDireccion(almacenDTO.tiendaId)}" class="form-control"/>
+                    <h:outputText value="#{abastecimientoBean.nombreDireccion(abastecimientoDTO.tiendaId)}" class="form-control"/>
 
                     <h:outputLabel value="Ubigeo" for="ubigeo" class="col-form-label"/>
-                    <h:outputText value="#{almacenBean.nombreDepartamento(almacenBean.codUbigeo)} - #{almacenBean.nombreProvincia(almacenBean.codUbigeo)} - #{almacenBean.nombreDistrito(almacenBean.codUbigeo)}" class="form-control"/>
+                    <h:outputText value="#{abastecimientoBean.nombreDepartamento(abastecimientoBean.codUbigeo)} - #{abastecimientoBean.nombreProvincia(abastecimientoBean.codUbigeo)} - #{abastecimientoBean.nombreDistrito(abastecimientoBean.codUbigeo)}" class="form-control"/>
 
                     <h:outputLabel value="Departamento" for="departamento" class="col-form-label"/>
                     <h:selectOneMenu id="departamento" value="#{productoBean.departamentoId}" class="form-select" converter="jakarta.faces.Integer">
@@ -55,23 +54,23 @@
                     <h:selectOneMenu id="categoria" value="#{productoBean.categoriaId}" class="form-select" converter="jakarta.faces.Integer">
                         <f:selectItem itemLabel="--- seleccione una categoria ---" itemValue="#{null}" noSelectionOption="true" />
                         <f:selectItems value="#{productoBean.categorias(productoBean.grupoId)}" var="cat" itemLabel="#{cat.nombre}" itemValue="#{cat.id}"/>
-                        <f:ajax execute="@this" render="producto" listener="#{almacenBean.alCambiarCategoria}"/>
+                        <f:ajax execute="@this" render="producto" listener="#{abastecimientoBean.alCambiarCategoria}"/>
                     </h:selectOneMenu>
 
                     <h:outputLabel value="Producto" for="producto" class="col-form-label"/>
-                    <h:selectOneMenu id="producto" value="#{almacenDTO.productoId}" class="form-select" converter="jakarta.faces.Integer">
+                    <h:selectOneMenu id="producto" value="#{abastecimientoDTO.productoId}" class="form-select" converter="jakarta.faces.Integer">
                         <f:selectItem itemLabel="--- seleccione un producto ---" itemValue="#{null}" noSelectionOption="true" />
                         <f:selectItems value="#{almacenBean.productos(productoBean.categoriaId)}" var="prod" itemLabel="#{prod.descripcion}" itemValue="#{prod.id}"/>
                     </h:selectOneMenu>
 
                     <h:outputLabel value="Cantidad" for="cantidad" class="col-form-label"/>
-                    <h:inputText id="cantidad" value="#{almacenDTO.cantidad}" label="Cantidad" class="form-control" jsf:placeholder="10" converter="jakarta.faces.Integer"/>
+                    <h:inputText id="cantidad" value="#{abastecimientoDTO.cantidad}" label="Cantidad" class="form-control" jsf:placeholder="10" converter="jakarta.faces.Integer"/>
 
-                    <h:commandButton value="#{almacenDTO.id>0 ? 'Guardar Cambios': 'Activar'}" action="#{almacenBean.procesar}" class="btn btn-primary"/>
-                    <h:link value="Cancelar" outcome="abastecimiento.xhtml" class="btn btn-primary"/>
+                    <h:commandButton value="#{abastecimientoDTO.id>0 ? 'Guardar Cambios': 'Activar'}" action="#{abastecimientoBean.procesar}" class="btn btn-primary"/>
+                    <h:link value="Cancelar" outcome="abastecimiento.xhtml?tiendaId=#{abastecimientoDTO.tiendaId}" class="btn btn-primary"/>
                     
-                    <h:inputHidden value="#{almacenDTO.tiendaId}"/>
-                    <h:inputHidden value="#{almacenDTO.id}"/>
+                    <h:inputHidden value="#{abastecimientoDTO.tiendaId}"/>
+                    <h:inputHidden value="#{abastecimientoDTO.id}"/>
 
                 </h:panelGrid>
             </h:form>

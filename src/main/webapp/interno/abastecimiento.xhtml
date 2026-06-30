@@ -6,6 +6,10 @@
                 xmlns:jsf="jakarta.faces.passthrough"
                 xmlns:ui="jakarta.faces.facelets">
     
+    <f:metadata>
+        <f:viewParam name="tiendaId" value="#{abastecimientoBean.tiendaId}"/>
+    </f:metadata>
+
     <ui:define name="content">
         
         <h:panelGrid border="1" class="table">
@@ -43,27 +47,27 @@
                     </h:column>
                     <h:column>
                         <f:facet name="header">
-                            <h:outputText value="Nombre"/>
+                            <h:outputText value="Producto"/>
                         </f:facet>
-                        <h:outputText value="#{t.productoId}"/>
-                    </h:column>
-                    <h:column>
-                        <f:facet name="header">
-                            <h:outputText value="Direccion"/>
-                        </f:facet>
-                        <h:outputText value="#{t.productoId}"/>
+                        <h:outputText value="#{abastecimientoBean.descripcionProducto(t.productoId)}"/>
                     </h:column>
                     <h:column>
                         <f:facet name="header">
                             <h:outputText value="Departamento"/>
                         </f:facet>
-                        <h:outputText value="#{t.productoId}"/>
+                        <h:outputText value="#{abastecimientoBean.nombreDepartamento(t.productoId)}"/>
                     </h:column>
                     <h:column>
                         <f:facet name="header">
-                            <h:outputText value="Provincia"/>
+                            <h:outputText value="Grupo"/>
                         </f:facet>
-                        <h:outputText value="#{t.productoId}"/>
+                        <h:outputText value="#{abastecimientoBean.nombreGrupo(t.productoId)}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Categoria"/>
+                        </f:facet>
+                        <h:outputText value="#{abastecimientoBean.nombreCategoria(t.productoId)}"/>
                     </h:column>
                     <h:column>
                         <f:facet name="header">
@@ -78,6 +82,10 @@
                         <h:link value="Agregar Stock" outcome="abastecimientoform" class="btn btn-sm btn-info">
                             <f:param name="tiendaId" value="#{t.tiendaId}"/>
                             <f:param name="codubigeo" value="#{abastecimientoBean.codigoUbigeoTienda(t.tiendaId)}"/>
+                            <f:param name="depa" value="#{abastecimientoBean.idDepartamento(t.productoId)}"/>
+                            <f:param name="grupo" value="#{abastecimientoBean.idGrupo(t.productoId)}"/>
+                            <f:param name="cate" value="#{abastecimientoBean.idCategoria(t.productoId)}"/>
+                            <f:param name="prod" value="#{t.productoId}"/>
                         </h:link>
                     </h:column>
                 </h:dataTable>
