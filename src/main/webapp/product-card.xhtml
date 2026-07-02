@@ -16,7 +16,7 @@
                 <span class="product-card__badge product-card__badge--soldout">AGOTADO</span>
             </ui:fragment>
             <ui:fragment rendered="#{not empty producto.rutaImg}">
-                <img src="resources/images/productos/#{producto.rutaImg}"
+                <img src="resources/imagenes/productos/#{producto.rutaImg}"
                      alt="#{producto.descripcion}"
                      class="product-card__image"
                      loading="lazy"/>
@@ -47,16 +47,12 @@
                 <ui:fragment rendered="#{producto.agotado}">Sin stock</ui:fragment>
                 <ui:fragment rendered="#{not producto.agotado}">Stock: #{producto.stock}</ui:fragment>
             </div>
-            <form method="POST"
-                  action="#{request.contextPath}/carrito/agregar"
-                  class="product-card__form">
-                <input type="hidden" name="productoId" value="#{producto.id}"/>
-                <button type="submit"
-                        disabled="#{producto.agotado ? 'disabled' : null}"
-                        class="btn btn--primary btn--block #{producto.agotado ? 'btn--disabled' : ''}">
-                    #{producto.agotado ? 'Agotado' : 'Agregar'}
-                </button>
-            </form>
+            <h:form class="product-card__form">  
+                <h:commandButton action="#{carritoBean.agregar(producto.id, 1)}" 
+                                 value="#{producto.agotado ? 'Agotado' : 'Agregar'}"
+                                 disabled="#{producto.agotado}"
+                                 class="btn btn--primary btn--block #{producto.agotado ? 'btn--disabled' : ''}" />
+            </h:form>
         </div>
     </article>
 </ui:composition>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<ui:composition template="/templates/base.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:jsf="jakarta.faces.passthrough"
+                xmlns:ui="jakarta.faces.facelets">
+    <ui:define name="title">Mi carrito - #{titulo}</ui:define>
+    <ui:define name="content">
+        <section class="section container">
+            <header class="page-header">
+                <h1 class="page-title">Mi carrito</h1>
+                <p class="page-lead">Revisa tu pedido antes de ir a pagar.</p>
+            </header>
+
+            <ui:fragment rendered="#{carritoBean.items.isEmpty()}">
+                <div class="empty-state">
+                    <h3>Tu carrito esta vacio</h3>
+                    <p>Agrega productos desde nuestro catalogo.</p>
+                    <h:link outcome="index" value="Ir a la tienda" class="btn btn--primary" />
+                </div>
+            </ui:fragment>
+
+            <ui:fragment rendered="#{not carritoBean.items.isEmpty()}">
+                <div class="cart-layout">
+                    <div class="cart-items">
+                        <h:form id="carritoForm">
+                            <ui:repeat value="#{carritoBean.items}" var="it">
+                                <div class="cart-item">
+                                    <h:panelGroup layout="block" styleClass="cart-item__media" jsf:style="background: #{it.producto.colorPlaceholder};">
+                                        <ui:fragment rendered="#{not empty it.producto.rutaImg}">
+                                            <img src="resources/imagenes/productos/#{it.producto.rutaImg}"
+                                                alt="#{it.producto.descripcion}"
+                                                class="cart-item__image"
+                                                loading="lazy"/>
+                                        </ui:fragment>
+                                        <ui:fragment rendered="#{empty it.producto.rutaImg}">
+                                            <span>#{it.producto.descripcion}</span>
+                                        </ui:fragment>
+                                    </h:panelGroup>
+                                    <div class="cart-item__info">
+                                        <strong>#{it.producto.descripcion}</strong>
+                                        <span class="text-soft">#{it.producto.unidad}</span>
+                                    </div>
+                                    <div class="cart-item__qty">
+                                        <h:commandLink action="#{carritoBean.actualizarCantidad(it.producto.id, it.cantidad - 1)}" 
+                                                       value="-" 
+                                                       styleClass="btn btn--secondary" 
+                                                       style="padding: 2px 8px; margin-right: 8px; text-decoration: none;" 
+                                                       rendered="#{it.cantidad > 1}" />
+                                        <span>x #{it.cantidad}</span>
+                                        <h:commandLink action="#{carritoBean.actualizarCantidad(it.producto.id, it.cantidad + 1)}" 
+                                                       value="+" 
+                                                       styleClass="btn btn--secondary" 
+                                                       style="padding: 2px 8px; margin-left: 8px; text-decoration: none;" />
+                                    </div>
+                                    <div class="cart-item__price">
+                                        S/ 
+                                        <h:outputText value="#{it.subtotal}">
+                                            <f:convertNumber pattern="#,##0.00"/>
+                                        </h:outputText>
+                                    </div>
+                                    <h:commandLink value="Quitar"
+                                                action="#{carritoBean.eliminar(it.producto.id)}">
+                                        <!--<f:ajax render=":carritoForm" execute=":carritoForm"/>-->
+                                    </h:commandLink>
+                                </div>
+                            </ui:repeat>
+                        </h:form>
+                    </div>
+
+                    <aside class="cart-summary">
+                        <h3>Resumen</h3>
+                        <div class="cart-summary__row">
+                            <span>
+                                Subtotal (#{carritoBean.totalItems} items)
+                            </span>
+                            <strong>
+                                S/ 
+                                <h:outputText value="#{carritoBean.total}">
+                                    <f:convertNumber pattern="#,##0.00"/>
+                                </h:outputText>
+                            </strong>
+                        </div>
+                        <div class="cart-summary__row text-soft">
+                            <span>Recojo en tienda</span>
+                            <span>#{deliveryBean.resumenUbicacion}</span>
+                        </div>
+                        <div class="cart-summary__total">
+                            <span>Total</span>
+                            <strong>
+                                S/ 
+                                <h:outputText value="#{carritoBean.total}">
+                                    <f:convertNumber pattern="#,##0.00"/>
+                                </h:outputText>
+                            </strong>
+                        </div>
+                        <h:link outcome="checkout" value="Ir a pagar" class="btn btn--primary btn--block btn--lg"/>
+                        <h:link outcome="index" value="Seguir comprando" class="btn btn--primary"/>
+                    </aside>
+                </div>
+            </ui:fragment>
+        </section>
+    </ui:define>
+</ui:composition>
