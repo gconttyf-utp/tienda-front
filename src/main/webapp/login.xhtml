@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<ui:composition template="/templates/base.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:jsf="jakarta.faces.passthrough"
+                xmlns:ui="jakarta.faces.facelets">
+
+    <ui:define name="title">Ingresar - #{titulo}</ui:define>
+
+    <ui:define name="content">
+        <section class="section container auth-wrap">
+            <div class="auth-card">
+                <h1>Panel de Acceso</h1>
+
+                <ui:fragment rendered="#{not empty param.error}">
+                    <div class="checkout-error" style="margin-bottom:14px;">
+                        <ui:fragment rendered="#{param.error == 'creds'}">Credenciales invalidas.</ui:fragment>
+                        <ui:fragment rendered="#{param.error == 'norol'}">Tu cuenta no tiene permisos de administrador.</ui:fragment>
+                        <ui:fragment rendered="#{param.error == 'empty'}">Completa correo y contrasena.</ui:fragment>
+                        <ui:fragment rendered="#{param.error == 'noauth'}">Sesion expirada, inicia sesion nuevamente.</ui:fragment>
+                        <ui:fragment rendered="#{param.error == 'net' or param.error == 'server' or param.error == 'notoken'}">
+                            No se pudo contactar al backend. Intenta en un momento.
+                        </ui:fragment>
+                    </div>
+                </ui:fragment>
+                
+                <h:form id="loginForm" styleClass="auth-form">
+                    <label class="field field--full">
+                        <span>Correo electronico</span>
+                        <h:inputText id="correo" 
+                                    value="#{loginBean.correo}" 
+                                    jsf:type="email" 
+                                    jsf:placeholder="admin@tiendavega.pe" 
+                                    required="true" />
+                    </label>
+                    
+                    <label class="field field--full">
+                        <span>Contraseña</span>
+                        <h:inputSecret id="clave" 
+                                    value="#{loginBean.clave}" 
+                                    jsf:placeholder="Tu contraseña" 
+                                    required="true" />
+                    </label>
+                    
+                    <h:commandButton value="Ingresar" 
+                                    action="#{loginBean.autenticarInterno}" 
+                                    styleClass="btn btn--primary btn--block btn--lg" />
+                </h:form>
+
+            </div>
+        </section>
+    </ui:define>
+</ui:composition>
