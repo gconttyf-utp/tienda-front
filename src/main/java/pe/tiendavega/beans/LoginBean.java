@@ -53,7 +53,8 @@ public class LoginBean implements Serializable {
             this.tokenCliente = loginJWT.accessToken();
             System.out.println("tokenCliente: " + tokenCliente);
             this.mensaje = "Login exitoso";
-            return "/publico/dashboard.jsf?faces-redirect=true";
+            //return "/publico/dashboard.jsf?faces-redirect=true";
+            return "/index.jsf?faces-redirect=true";
         } else {
             this.mensaje = "Usuario o clave incorrectos";
             return "/login.jsf?faces-redirect=true";

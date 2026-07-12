@@ -16,39 +16,56 @@
 
                 <div class="mega__panel">
                     <ul class="mega__deps">
-                        <ui:repeat value="#{publicoBean.departamentos}" var="d">
-                            <li class="mega__dep">
-                                <a class="mega__dep-link"
-                                   href="#{request.contextPath}/catalogo.jsf?dep=#{d.id}">
-                                    <span class="mega__dep-name">#{d.nombre}</span>
-                                    <svg class="mega__arrow" viewBox="0 0 24 24" aria-hidden="true">
-                                        <path d="M9 6l6 6-6 6"/>
-                                    </svg>
-                                </a>
-                                <div class="mega__flyout">
-                                    <h4 class="mega__flyout-title">#{d.nombre}</h4>
-                                    <a class="mega__flyout-all"
-                                       href="#{request.contextPath}/catalogo.jsf?dep=#{d.id}">Ver todo</a>
-                                    <ul class="mega__groups">
-                                        <ui:repeat value="#{publicoBean.getGrupos(d.id)}" var="g">
-                                            <li>
-                                                <a href="#{request.contextPath}/catalogo.jsf?dep=#{d.id}&amp;grupo=#{g.id}">#{g.nombre}</a>
-                                            </li>
-                                        </ui:repeat>
-                                    </ul>
-                                </div>
-                            </li>
-                        </ui:repeat>
+                        
+                            <ui:repeat value="#{publicoBean.departamentos}" var="d">
+                                <li class="mega__dep">
+                                    <a class="mega__dep-link"
+                                       href="#{request.contextPath}/catalogo.jsf?dep=#{d.id}">
+                                        <span class="mega__dep-name">#{d.nombre}</span>
+                                        <svg class="mega__arrow" viewBox="0 0 24 24" aria-hidden="true">
+                                            <path d="M9 6l6 6-6 6"/>
+                                        </svg>
+                                    </a>
+                                    <div class="mega__flyout">
+                                        <h4 class="mega__flyout-title">#{d.nombre}</h4>
+                                        <a class="mega__flyout-all"
+                                           href="#{request.contextPath}/catalogo.jsf?dep=#{d.id}">Ver todo</a>
+                                        <ul class="mega__groups">
+                                            <ui:repeat value="#{publicoBean.getGrupos(d.id)}" var="g">
+                                                <li>
+                                                    <a href="#{request.contextPath}/catalogo.jsf?dep=#{d.id}&amp;grupo=#{g.id}">#{g.nombre}</a>
+                                                </li>
+                                            </ui:repeat>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ui:repeat>
+                        
                     </ul>
                 </div>
             </div>
 
             <ul class="navbar__quick">
-                <ui:repeat value="#{publicoBean.departamentos}" var="c" varStatus="st" size="8">
+                <ui:fragment rendered="#{empty loginBean.tokenCliente}">
+                    <ui:repeat value="#{publicoBean.departamentos}" var="c" varStatus="st" size="8">
+                        <li>
+                            <a href="#{request.contextPath}/catalogo.jsf?dep=#{c.id}">#{c.nombre}</a>
+                        </li>
+                    </ui:repeat>
+                </ui:fragment>
+                        
+                <ui:fragment rendered="#{not empty loginBean.tokenCliente}">
+                    <li><h:link outcome="index.xhtml" value="Inicio" /></li>
+                    <li><h:link outcome="carrito.xhtml" value="Carrito" /></li>
+                    <li><h:link outcome="checkout.xhtml" value="Pendiente Pago" /></li>
+                    <li><h:link outcome="seguimiento.xhtml" value="Seguimiento de Pedidos" /></li>
+                    <li><h:link outcome="reclamos.xhtml" value="Reclamos" /></li>
                     <li>
-                        <a href="#{request.contextPath}/catalogo.jsf?dep=#{c.id}">#{c.nombre}</a>
+                        <h:form style="display:inline; margin:0; padding:0;">
+                            <h:commandLink action="#{loginBean.cerrarSesionCliente}" value="Salir" style="color: #dc3545; font-weight: bold;" />
+                        </h:form>
                     </li>
-                </ui:repeat>
+                </ui:fragment>
             </ul>
 
             <a class="navbar__offers" href="#{request.contextPath}/catalogo.jsf?ofertas=1">
