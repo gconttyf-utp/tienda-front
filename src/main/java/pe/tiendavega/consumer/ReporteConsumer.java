@@ -14,7 +14,7 @@ import pe.tiendavega.model.dto.ReporteDTO;
 @ApplicationScoped
 public class ReporteConsumer {
 
-    public List<ReporteDTO> reporteDiario(String tokenUsuario, String fecha) {
+    public List<ReporteDTO> reporteDiario(String tokenUsuario) {
         try (Client client = ClientBuilder.newClient()) {
 
             WebTarget target = client.target(RutasConsumer.ENDPOINT_USUARIO + "/reportes/diario");
