@@ -4,11 +4,27 @@
                 xmlns:h="jakarta.faces.html"
                 xmlns:f="jakarta.faces.core"
                 xmlns:jsf="jakarta.faces.passthrough"
+                xmlns:p="http://primefaces.org/ui"
                 xmlns:ui="jakarta.faces.facelets">
     
+    <f:metadata>
+        <f:viewAction action="#{reporteBean.cargarReporteSemanal}" />
+    </f:metadata>
+
     <ui:define name="content">
         
-        
+        <h:panelGrid border="1" class="table">
+            <f:facet name="header">
+                <h:outputText value="Reporte Semanal de Ventas" class="fs-5 fw-bold"/>
+            </f:facet>
+
+            <h:outputText value="No hay datos para mostrar en el reporte." rendered="#{empty reporteBean.reportes}" class="alert alert-warning d-block"/>
+            
+            <h:panelGroup rendered="#{not empty reporteBean.reportes}" style="width: 100%; display: flex; justify-content: center; padding: 20px;">
+                <p:pieChart model="#{reporteBean.pieModelSemanal}" style="width: 500px; height: 500px;"/>
+            </h:panelGroup>
+
+        </h:panelGrid>
         
     </ui:define>
 
