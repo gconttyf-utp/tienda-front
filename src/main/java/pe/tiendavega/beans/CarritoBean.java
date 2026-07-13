@@ -8,9 +8,11 @@ import java.util.List;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
-import pe.tiendavega.consumer.ProductoConsumer;
+import pe.tiendavega.consumer.PedidoConsumer;
 import pe.tiendavega.consumer.PublicoConsumer;
 import pe.tiendavega.model.ItemCarrito;
+import pe.tiendavega.model.dto.PedidoDTO;
+import pe.tiendavega.model.dto.PedidoDetalleDTO;
 import pe.tiendavega.model.dto.ProductoDTO;
 
 @Named("carritoBean")
@@ -23,6 +25,15 @@ public class CarritoBean implements Serializable{
 
     @Inject
     private PublicoConsumer publicoConsumer;
+
+    @Inject
+    private PedidoConsumer pedidoConsumer;
+
+    @Inject
+    private LoginBean loginBean;
+
+    @Inject
+    private DeliveryBean deliveryBean;
 
     public void agregar(Integer idProducto, Integer cantidad) {
         System.out.println("Ingresando a CarritoBean Agregar");
@@ -94,5 +105,46 @@ public class CarritoBean implements Serializable{
 
         // Regresamos a la misma página (carrito.xhtml)
         return null;
+    }
+
+    public String agregarPedido(){
+        String token = loginBean.getTokenCliente();
+        if (token == null || token.isEmpty()) {
+            System.out.println("¡ADVERTENCIA! Intentando crear pedido pero no hay token en la sesión.");
+            return "/login.jsf?faces-redirect=true";
+        }
+        
+        System.out.println("Ingresando a CarritoBean agregarPedido");
+        System.out.println("Cantidad total: " + getTotal());
+        System.out.println("Total de items: " + getTotalItems());
+        items.forEach(item -> {
+            System.out.println("Producto: " + item);
+        });
+
+        List<PedidoDetalleDTO> detalleDTOs = new ArrayList<>();
+        
+        items.forEach(item -> {
+            PedidoDetalleDTO detalleDTO = new PedidoDetalleDTO();
+            detalleDTO.setProductoID(item.getProducto().getId());
+            detalleDTO.setCantidad(item.getCantidad());
+            BigDecimal subtotal = item.getProducto().getPrecioOnline().multiply(BigDecimal.valueOf(item.getCantidad()));
+            detalleDTO.setSubtotal(subtotal);
+            detalleDTOs.add(detalleDTO);
+        });
+
+        PedidoDTO pedidoDTO = new PedidoDTO();
+        pedidoDTO.setTiendaID( deliveryBean.getTiendaId() );
+        pedidoDTO.setTotal( getTotal() );
+        pedidoDTO.setDetalles( detalleDTOs );
+
+        PedidoDTO pedidoDB = pedidoConsumer.crearPedido(token, pedidoDTO);
+
+        if (pedidoDB != null) {
+            System.out.println("Pedido creado exitosamente: " + pedidoDB.getId());
+            items.clear();
+            return "checkout.jsf?idPedido=" + pedidoDB.getId() + "&faces-redirect=true";
+        }
+        
+        return "carrito.jsf?faces-redirect=true";
     }
 }

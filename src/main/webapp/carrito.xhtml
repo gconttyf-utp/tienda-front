@@ -95,7 +95,17 @@
                                 </h:outputText>
                             </strong>
                         </div>
-                        <h:link outcome="checkout" value="Ir a pagar" class="btn btn--primary btn--block btn--lg"/>
+                        <ui:fragment rendered="#{not empty loginBean.tokenCliente}">
+                            <h:form id="carritoPedidoForm">
+                                <h:commandLink action="#{carritoBean.agregarPedido}" 
+                                               value="Ir a pagar" 
+                                               class="btn btn--primary btn--block btn--lg"
+                                               onclick="return confirm('¿Estás seguro que deseas realizar el pago y recoger los productos en la tienda seleccionada?');"/>
+                            </h:form>
+                        </ui:fragment>
+                        <ui:fragment rendered="#{empty loginBean.tokenCliente}">
+                            <h:link outcome="login.xhtml" value="Ir a pagar" class="btn btn--primary btn--block btn--lg"/>
+                        </ui:fragment>
                         <h:link outcome="index" value="Seguir comprando" class="btn btn--primary"/>
                     </aside>
                 </div>

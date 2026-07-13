@@ -5,6 +5,10 @@
                 xmlns:f="jakarta.faces.core"
                 xmlns:jsf="jakarta.faces.passthrough"
                 xmlns:ui="jakarta.faces.facelets">
+    <f:metadata>
+        <f:viewParam name="idPedido" value="#{pedidoBean.pedidoId}"/>
+    </f:metadata>
+
     <ui:define name="title">Mi carrito - #{titulo}</ui:define>
     <ui:define name="content">
         <ui:fragment rendered="#{empty loginBean.tokenCliente}">
@@ -14,7 +18,107 @@
             </div>
         </ui:fragment>
         <ui:fragment rendered="#{not empty loginBean.tokenCliente}">
-            
-        </ui:fragment>
+            <div class="container section">
+                <h2 style="margin-bottom: 20px;">Resumen de Pago</h2>
+                <h:form id="pagoForm">
+                    <table class="table table-bordered" style="width: 100%; border-collapse: collapse; text-align: left; margin-bottom: 20px;">
+                        <tr>
+                            <th style="padding: 10px; border: 1px solid #ddd; width: 30%;">ID Pedido</th>
+                            <td style="padding: 10px; border: 1px solid #ddd;">
+                                <h:inputText value="#{pedidoActual.id}" readonly="true" style="border:none; background:transparent; outline: none;" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th style="padding: 10px; border: 1px solid #ddd;">Fecha de Creación</th>
+                            <td style="padding: 10px; border: 1px solid #ddd;">
+                                <h:outputText value="#{pedidoActual.fechaCreacion}">
+                                    <f:convertDateTime type="localDateTime" pattern="dd/MM/yyyy HH:mm" />
+                                </h:outputText>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th style="padding: 10px; border: 1px solid #ddd;">Cantidad de Productos</th>
+                            <td style="padding: 10px; border: 1px solid #ddd;">
+                                <h:inputText value="#{pedidoActual.detalles.size()}" readonly="true" style="border:none; background:transparent; outline: none;" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th style="padding: 10px; border: 1px solid #ddd;">Total</th>
+                            <td style="padding: 10px; border: 1px solid #ddd;">
+                                S/ <h:outputText value="#{pedidoActual.total}">
+                                    <f:convertNumber pattern="#,##0.00"/>
+                                </h:outputText>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th style="padding: 10px; border: 1px solid #ddd;">Tipo de Pago</th>
+                            <td style="padding: 10px; border: 1px solid #ddd;">
+                                <h:selectOneMenu value="#{pedidoActual.tipoPago}" style="padding: 5px; min-width: 200px;">
+                                    <f:selectItem itemValue="2" itemLabel="EFECTIVO" />
+                                    <f:selectItem itemValue="3" itemLabel="TARJETA" />
+                                    <f:selectItem itemValue="4" itemLabel="QR" />
+                                    <f:selectItem itemValue="5" itemLabel="YAPE" />
+                                    <f:ajax render="@form" />
+                                </h:selectOneMenu>
+                            </td>
+                        </tr>
+                        <ui:fragment rendered="#{pedidoActual.tipoPago == 3}">
+                            <tr>
+                                <th style="padding: 10px; border: 1px solid #ddd;">Datos de Tarjeta</th>
+                                <td style="padding: 10px; border: 1px solid #ddd;">
+                                    <div style="display: flex; flex-direction: column; gap: 10px; max-width: 300px;">
+                                        <div style="display: flex; align-items: center; gap: 10px;">
+                                            <input type="text" id="nroTarjeta" oninput="actualizarLogoTarjeta(this.value)" placeholder="Número de Tarjeta" style="padding: 5px; flex: 1; border: 1px solid #ccc; border-radius: 4px;" maxlength="19" />
+                                            <img id="logoTarjeta" src="" style="display:none; height: 30px;" alt="Logo" />
+                                        </div>
+                                        <input type="text" placeholder="Nombre en la Tarjeta" style="padding: 5px; border: 1px solid #ccc; border-radius: 4px;" />
+                                        <div style="display: flex; gap: 10px;">
+                                            <input type="text" placeholder="MM/AA" style="padding: 5px; flex: 1; border: 1px solid #ccc; border-radius: 4px;" maxlength="5" />
+                                            <input type="password" placeholder="CVV" style="padding: 5px; width: 70px; border: 1px solid #ccc; border-radius: 4px;" maxlength="4" />
+                                        </div>
+                                    </div>
+                                    <script type="text/javascript">
+                                        function actualizarLogoTarjeta(val) {
+                                            var img = document.getElementById('logoTarjeta');
+                                            // Eliminar espacios por si el usuario formatea el número
+                                            var num = val.replace(/\s+/g, '');
+                                            if (num.startsWith('1111')) {
+                                                img.src = '#{request.contextPath}/resources/imagenes/pagos/visa.png';
+                                                img.style.display = 'block';
+                                            } else if (num.startsWith('2222')) {
+                                                img.src = '#{request.contextPath}/resources/imagenes/pagos/mastercard.png';
+                                                img.style.display = 'block';
+                                            } else {
+                                                img.style.display = 'none';
+                                            }
+                                        }
+                                    </script>
+                                </td>
+                            </tr>
+                        </ui:fragment>
+                        <ui:fragment rendered="#{pedidoActual.tipoPago == 4}">
+                            <tr>
+                                <th style="padding: 10px; border: 1px solid #ddd;">QR</th>
+                                <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">
+                                    <img src="#{request.contextPath}/resources/imagenes/pagos/qr.jpeg" alt="Código YAPE" style="max-width: 200px;" />
+                                </td>
+                            </tr>
+                        </ui:fragment>
+                        <ui:fragment rendered="#{pedidoActual.tipoPago == 5}">
+                            <tr>
+                                <th style="padding: 10px; border: 1px solid #ddd;">YAPE</th>
+                                <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">
+                                    <img src="#{request.contextPath}/resources/imagenes/pagos/yape.jpeg" alt="Código YAPE" style="max-width: 200px;" />
+                                </td>
+                            </tr>
+                        </ui:fragment>
+                    </table>
+                    
+                    <div style="display: flex; gap: 15px; margin-top: 20px;">
+                        <h:link outcome="pendientepago.xhtml" value="Cancelar" class="btn" style="background-color: #6c757d; color: white;" />
+                        <h:commandButton action="#{pedidoBean.procesarPago}" value="Pagar" class="btn btn--primary" />
+                    </div>
+                </h:form>
+            </div></ui:fragment>
     </ui:define>
 </ui:composition>

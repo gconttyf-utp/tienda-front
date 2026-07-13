@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<ui:composition template="/templates/base.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:jsf="jakarta.faces.passthrough"
+                xmlns:ui="jakarta.faces.facelets">
+    <ui:define name="title">Mi carrito - #{titulo}</ui:define>
+    <ui:define name="content">
+        <ui:fragment rendered="#{empty loginBean.tokenCliente}">
+            <div class="container section" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 50vh; text-align: center;">
+                <h2 style="margin-bottom: 20px;">Necesitas iniciar sesión para continuar</h2>
+                <h:link outcome="login.xhtml" value="Hacer Login" styleClass="btn btn--primary btn--lg" />
+            </div>
+        </ui:fragment>
+        <ui:fragment rendered="#{not empty loginBean.tokenCliente}">
+            <div class="container section">
+                <h2 style="margin-bottom: 20px;">Seguimiento de Pedidos</h2>
+                <h:dataTable value="#{pedidoBean.listadoSeguimiento}" var="p" 
+                             styleClass="table table-bordered table-striped"
+                             style="width: 100%; border-collapse: collapse; text-align: left;">
+                    <h:column>
+                        <f:facet name="header">ID Pedido</f:facet>
+                        #{p.id}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Fecha de Creación</f:facet>
+                        <h:outputText value="#{p.fechaCreacion}">
+                            <f:convertDateTime type="localDateTime" pattern="dd/MM/yyyy HH:mm" />
+                        </h:outputText>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Nombre de la tienda</f:facet>
+                        #{pedidoBean.obtenerNombreTienda(p.tiendaID)}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Total</f:facet>
+                        S/ <h:outputText value="#{p.total}">
+                            <f:convertNumber pattern="#,##0.00"/>
+                        </h:outputText>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Estado</f:facet>
+                        #{p.estado}
+                    </h:column>
+                </h:dataTable>
+            </div>
+        </ui:fragment>
+    </ui:define>
+</ui:composition>
