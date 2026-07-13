@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<ui:composition template="/templates/base.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:jsf="jakarta.faces.passthrough"
+                xmlns:ui="jakarta.faces.facelets">
+    <f:metadata>
+        <f:viewParam name="pedidoId" value="#{reclamoBean.pedidoId}"/>
+        <f:viewAction action="#{reclamoBean.obtenerPedido}" />
+    </f:metadata>
+    <ui:define name="title">Mi carrito - #{titulo}</ui:define>
+    <ui:define name="content">
+        <ui:fragment rendered="#{empty loginBean.tokenCliente}">
+            <div class="container section" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 50vh; text-align: center;">
+                <h2 style="margin-bottom: 20px;">Necesitas iniciar sesión para continuar</h2>
+                <h:link outcome="login.xhtml" value="Hacer Login" styleClass="btn btn--primary btn--lg" />
+            </div>
+        </ui:fragment>
+        <ui:fragment rendered="#{not empty loginBean.tokenCliente}">
+            <div class="container section">
+                <h2 style="margin-bottom: 20px;">Generar Reclamo</h2>
+                <h:form id="reclamoForm">
+                    <table class="table table-bordered" style="width: 100%; border-collapse: collapse; text-align: left; margin-bottom: 20px;">
+                        <tr>
+                            <th style="padding: 10px; border: 1px solid #ddd; width: 30%;">Pedido ID</th>
+                            <td style="padding: 10px; border: 1px solid #ddd;">#{reclamoBean.pedidoDTO.id}</td>
+                        </tr>
+                        <tr>
+                            <th style="padding: 10px; border: 1px solid #ddd;">Fecha de Creación del Pedido</th>
+                            <td style="padding: 10px; border: 1px solid #ddd;">
+                                <h:outputText value="#{reclamoBean.pedidoDTO.fechaCreacion}">
+                                    <f:convertDateTime type="localDateTime" pattern="dd/MM/yyyy HH:mm" />
+                                </h:outputText>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th style="padding: 10px; border: 1px solid #ddd; vertical-align: top;">Productos</th>
+                            <td style="padding: 10px; border: 1px solid #ddd;">
+                                <h:dataTable value="#{reclamoBean.pedidoDTO.detalles}" var="det" 
+                                             styleClass="table table-sm table-bordered" style="width: 100%; border-collapse: collapse;">
+                                    <h:column>
+                                        <f:facet name="header">Producto</f:facet>
+                                        #{reclamoBean.obtenerNombreProducto(det.productoID)}
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">Cantidad</f:facet>
+                                        #{det.cantidad}
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">Subtotal</f:facet>
+                                        S/ <h:outputText value="#{det.subtotal}">
+                                            <f:convertNumber pattern="#,##0.00"/>
+                                        </h:outputText>
+                                    </h:column>
+                                </h:dataTable>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th style="padding: 10px; border: 1px solid #ddd;">Comentario</th>
+                            <td style="padding: 10px; border: 1px solid #ddd;">
+                                <h:inputText value="#{reclamoBean.reclamoDTO.comentario}" style="width: 100%; padding: 5px; border: 1px solid #ccc; border-radius: 4px;" required="true" requiredMessage="El comentario es requerido." />
+                            </td>
+                        </tr>
+                    </table>
+                    
+                    <div style="display: flex; gap: 15px; margin-top: 20px;">
+                        <h:link outcome="seguimiento.xhtml" value="Regresar" class="btn" style="background-color: #6c757d; color: white;" />
+                        <h:commandButton action="#{reclamoBean.crearReclamo}" value="Generar Reclamo" class="btn btn--primary" />
+                    </div>
+                </h:form>
+            </div>
+        </ui:fragment>
+    </ui:define>
+</ui:composition>

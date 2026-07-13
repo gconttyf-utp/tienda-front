@@ -14,7 +14,41 @@
             </div>
         </ui:fragment>
         <ui:fragment rendered="#{not empty loginBean.tokenCliente}">
-            
+            <div class="container section">
+                <h2 style="margin-bottom: 20px;">Mis Reclamos</h2>
+                <h:dataTable value="#{reclamoBean.reclamos}" var="r" 
+                             styleClass="table table-bordered table-striped"
+                             style="width: 100%; border-collapse: collapse; text-align: left;">
+                    <h:column>
+                        <f:facet name="header">Id Reclamo</f:facet>
+                        #{r.id}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Fecha de Creación</f:facet>
+                        <h:outputText value="#{r.fechaCreacion}">
+                            <f:convertDateTime type="localDateTime" pattern="dd/MM/yyyy HH:mm" />
+                        </h:outputText>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Fecha de Atención</f:facet>
+                        <h:outputText value="#{r.fechaAtencion}">
+                            <f:convertDateTime type="localDateTime" pattern="dd/MM/yyyy HH:mm" />
+                        </h:outputText>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Comentario</f:facet>
+                        #{r.comentario}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Respuesta</f:facet>
+                        #{r.comentarioRespuesta}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Estado</f:facet>
+                        #{r.estado}
+                    </h:column>
+                </h:dataTable>
+            </div>
         </ui:fragment>
     </ui:define>
 </ui:composition>
