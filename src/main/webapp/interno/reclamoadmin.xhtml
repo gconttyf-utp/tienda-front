@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<ui:composition template="base.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:jsf="jakarta.faces.passthrough"
+                xmlns:ui="jakarta.faces.facelets">
+    
+    <ui:define name="content">
+        
+         <h:panelGrid border="1" class="table">
+            <f:facet name="header">
+                <h:outputText value="#{reclamoUsuarioBean.titulo}" class="fs-5 fw-bold"/>
+            </f:facet>
+            
+            <h:outputText value="No existen tiendas en la base de datos!" rendered="#{empty reclamoUsuarioBean.reclamos}"
+                          class="alert alert-warning text-center d-block"/>
+            
+            <h:dataTable var="p" value="#{reclamoUsuarioBean.reclamos}" rendered="#{not empty reclamoUsuarioBean.reclamos}" 
+                         class="table table-hover table-striped">
+                
+                <h:column>
+                    <f:facet name="header">
+                        <h:outputText value="Id Reclamo"/>
+                    </f:facet>
+                    <h:outputText value="#{p.id}" />
+                </h:column>
+                
+                <h:column>
+                    <f:facet name="header">
+                        <h:outputText value="Id Pedido"/>
+                    </f:facet>
+                    <h:outputText value="#{p.pedidoID}" />
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">
+                        <h:outputText value="Fecha de Creación"/>
+                    </f:facet>
+                    <h:outputText value="#{p.fechaCreacion}">
+                        <f:convertDateTime type="localDateTime" pattern="dd/MM/yyyy HH:mm" />
+                    </h:outputText>
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">
+                        <h:outputText value="Fecha de Atención"/>
+                    </f:facet>
+                    <h:outputText value="#{p.fechaAtencion}">
+                        <f:convertDateTime type="localDateTime" pattern="dd/MM/yyyy HH:mm" />
+                    </h:outputText>
+                </h:column>
+                
+                <h:column>
+                    <f:facet name="header">
+                        <h:outputText value="Comentario"/>
+                    </f:facet>
+                    <h:outputText value="#{p.comentario}" />
+                </h:column>
+                
+                <h:column>
+                    <f:facet name="header">
+                        <h:outputText value="Respuesta"/>
+                    </f:facet>
+                    <h:outputText value="#{p.comentarioRespuesta}" />
+                </h:column>
+                
+                <h:column>
+                    <f:facet name="header">
+                        <h:outputText value="Estado"/>
+                    </f:facet>
+                    <h:outputText value="#{p.estado}" />
+                </h:column>
+                
+                <h:column>
+                    <f:facet name="header">
+                        <h:outputText value="Atender"/>
+                    </f:facet>
+                    <h:form id="btnFormDespacho">
+                        <h:commandLink value="Atender" action="#{reclamoUsuarioBean.reclamoAdminFormulario(p.id)}" 
+                                       class="btn btn-sm btn-warning" 
+                                       rendered="#{p.estado eq 'PENDIENTE'}"/>
+                        <h:outputText value="- - -" rendered="#{p.estado ne 'PENDIENTE'}"/>
+                    </h:form>
+                </h:column>
+                
+            </h:dataTable>
+        </h:panelGrid>
+         
+        
+    </ui:define>
+
+</ui:composition>

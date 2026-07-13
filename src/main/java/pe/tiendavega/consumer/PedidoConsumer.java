@@ -136,4 +136,106 @@ public class PedidoConsumer {
         }
     }
 
+    public PedidoDTO actualizarDespacho(String tokenCliente, Integer pedidoId) {
+        try (Client client = ClientBuilder.newClient()) {
+
+            WebTarget target = client.target(RutasConsumer.ENDPOINT_USUARIO + "/pedidos/actualizardespacho/{id}")
+                .resolveTemplate("id", pedidoId);
+
+            System.out.println("target= " + target.getUri().toString());
+
+            Response response = target.request(MediaType.APPLICATION_JSON)
+                    .header("Authorization", "Bearer " + tokenCliente)
+                    .put(null);
+
+            if (response.getStatus() == Response.Status.OK.getStatusCode() ||
+                    response.getStatus() == Response.Status.CREATED.getStatusCode() ||
+                    response.getStatus() == Response.Status.ACCEPTED.getStatusCode()) {
+
+                return response.readEntity(PedidoDTO.class);
+
+            } else {
+                System.out.println("Error en la petición: " + response.getStatus());
+                return null;
+            }
+
+        }
+    }
+
+    public PedidoDTO actualizarEntrega(String tokenCliente, Integer pedidoId) {
+        try (Client client = ClientBuilder.newClient()) {
+
+            WebTarget target = client.target(RutasConsumer.ENDPOINT_USUARIO + "/pedidos/actualizarrecojo/{id}")
+                .resolveTemplate("id", pedidoId);
+
+            System.out.println("target= " + target.getUri().toString());
+
+            Response response = target.request(MediaType.APPLICATION_JSON)
+                    .header("Authorization", "Bearer " + tokenCliente)
+                    .put(null);
+
+            if (response.getStatus() == Response.Status.OK.getStatusCode() ||
+                    response.getStatus() == Response.Status.CREATED.getStatusCode() ||
+                    response.getStatus() == Response.Status.ACCEPTED.getStatusCode()) {
+
+                return response.readEntity(PedidoDTO.class);
+
+            } else {
+                System.out.println("Error en la petición: " + response.getStatus());
+                return null;
+            }
+
+        }
+    }
+
+    public List<PedidoDTO> pedidosPendienteDespacho(String tokenCliente) {
+        try (Client client = ClientBuilder.newClient()) {
+
+            WebTarget target = client.target(RutasConsumer.ENDPOINT_USUARIO + "/pedidos/pendientedespacho");
+
+            System.out.println("Target= " + target.getUri().toString());
+
+            Response response = target.request(MediaType.APPLICATION_JSON)
+                    .header("Authorization", "Bearer " + tokenCliente)
+                    .get();
+
+            if (response.getStatus() == Response.Status.OK.getStatusCode() ||
+                    response.getStatus() == Response.Status.CREATED.getStatusCode() ||
+                    response.getStatus() == Response.Status.ACCEPTED.getStatusCode()) {
+
+                return response.readEntity(new GenericType<List<PedidoDTO>>() {});
+
+            } else {
+                System.out.println("Error en la petición: " + response.getStatus());
+                return null;
+            }
+
+        }
+    }
+
+    public List<PedidoDTO> pedidosPendienteEntrega(String tokenCliente) {
+        try (Client client = ClientBuilder.newClient()) {
+
+            WebTarget target = client.target(RutasConsumer.ENDPOINT_USUARIO + "/pedidos/pendienteentrega");
+
+            System.out.println("Target= " + target.getUri().toString());
+
+            Response response = target.request(MediaType.APPLICATION_JSON)
+                    .header("Authorization", "Bearer " + tokenCliente)
+                    .get();
+
+            if (response.getStatus() == Response.Status.OK.getStatusCode() ||
+                    response.getStatus() == Response.Status.CREATED.getStatusCode() ||
+                    response.getStatus() == Response.Status.ACCEPTED.getStatusCode()) {
+
+                return response.readEntity(new GenericType<List<PedidoDTO>>() {});
+
+            } else {
+                System.out.println("Error en la petición: " + response.getStatus());
+                return null;
+            }
+
+        }
+    }
+
 }

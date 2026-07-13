@@ -29,12 +29,15 @@ public class PedidoBean implements Serializable {
     private List<PedidoDTO> pendientesPago;
     private List<PedidoDTO> listadoSeguimiento;
 
+    private String titulo;
+
     private Integer pedidoId;
 
     private PedidoDTO pedidoDTO;
 
     @PostConstruct
     public void init() {
+        this.titulo = "Listado de Pedidos";
         pendientesPago = new ArrayList<>();
         listadoSeguimiento = new ArrayList<>();
         String token = loginBean.getTokenCliente();
@@ -45,7 +48,7 @@ public class PedidoBean implements Serializable {
                 if (pedido != null) {
                     pendientesPago = pedido;
                 }
-                
+
                 List<PedidoDTO> seguimiento = pedidoConsumer.pedidosCliente(token);
                 if (seguimiento != null) {
                     listadoSeguimiento = seguimiento;
@@ -61,8 +64,8 @@ public class PedidoBean implements Serializable {
     @Model
     public PedidoDTO pedidoActual() {
         this.pedidoDTO = new PedidoDTO();
-        
-        if ( pedidoId != null && pedidoId > 0 ){
+
+        if (pedidoId != null && pedidoId > 0) {
             this.pedidoDTO = pedidoConsumer.obtenerPedido(loginBean.getTokenCliente(), pedidoId);
         }
         return this.pedidoDTO;
@@ -92,6 +95,14 @@ public class PedidoBean implements Serializable {
         this.pedidoId = pedidoId;
     }
 
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
+
     @Inject
     private TiendaConsumer tiendaConsumer;
 
@@ -99,12 +110,13 @@ public class PedidoBean implements Serializable {
         return tiendaConsumer.obtenerTienda(loginBean.getTokenCliente(), id).getNombre();
     }
 
-    public String procesarPago(){
+    public String procesarPago() {
         if (this.pedidoDTO != null) {
             System.out.println("Procesando pago...");
             System.out.println("ID Pedido: " + this.pedidoDTO.getId());
             System.out.println("Tipo de Pago: " + this.pedidoDTO.getTipoPago());
-            PedidoDTO pedidoActualizado = pedidoConsumer.actualizarPago(loginBean.getTokenCliente(), this.pedidoDTO.getId(), this.pedidoDTO.getTipoPago());
+            PedidoDTO pedidoActualizado = pedidoConsumer.actualizarPago(loginBean.getTokenCliente(),
+                    this.pedidoDTO.getId(), this.pedidoDTO.getTipoPago());
             if (pedidoActualizado != null) {
                 this.pedidoDTO = new PedidoDTO();
                 init();
@@ -113,5 +125,5 @@ public class PedidoBean implements Serializable {
         }
         return "checkout.jsf?idPedido=" + this.pedidoDTO.getId() + "&faces-redirect=true";
     }
-    
+
 }

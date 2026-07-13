@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<ui:composition template="base.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:jsf="jakarta.faces.passthrough"
+                xmlns:ui="jakarta.faces.facelets">
+    <f:metadata>
+        <f:viewParam name="reclamoId" value="#{reclamoUsuarioBean.reclamoId}"/>
+        <f:viewAction action="#{reclamoUsuarioBean.obtenerPedido}" />
+    </f:metadata>
+
+    <ui:define name="content">
+
+        <h:panelGrid border="1" class="table">
+            <f:facet name="header">
+                <h:outputText value="Atender Reclamo"/>
+            </f:facet>
+
+            <h:form id="formReclamo">
+                <h:panelGrid columns="2" class="table table-hover table-striped">
+                    <h:outputLabel value="ID Reclamo" for="idReclamo" class="col-form-label"/>
+                    <h:inputText id="idReclamo" value="#{reclamoUsuarioBean.reclamoDTO.id}" readonly="true" label="ID Reclamo" class="form-control"/>
+
+                    <h:outputLabel value="ID Pedido" for="idPedido" class="col-form-label"/>
+                    <h:outputText id="idPedido" value="#{reclamoUsuarioBean.reclamoDTO.pedidoID}" label="ID Pedido" class="form-control"/>
+
+                    <h:outputLabel value="Fecha Creacion" for="fechaCreacion" class="col-form-label"/>
+                    <h:outputText id="fechaCreacion" value="#{reclamoUsuarioBean.reclamoDTO.fechaCreacion}" label="fechaCreacion" class="form-control">
+                        <f:convertDateTime type="localDateTime" pattern="dd/MM/yyyy HH:mm" />
+                    </h:outputText>
+
+                    <h:outputLabel value="Productos" class="col-form-label" style="vertical-align: top; padding-top: 10px;"/>
+                    <h:dataTable value="#{reclamoUsuarioBean.pedidoDTO.detalles}" var="det" 
+                                 styleClass="table table-sm table-bordered" style="width: 100%; margin-bottom: 0;">
+                        <h:column>
+                            <f:facet name="header">Producto</f:facet>
+                            #{reclamoUsuarioBean.obtenerNombreProducto(det.productoID)}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Cantidad</f:facet>
+                            #{det.cantidad}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Subtotal</f:facet>
+                            S/ <h:outputText value="#{det.subtotal}">
+                                <f:convertNumber pattern="#,##0.00"/>
+                            </h:outputText>
+                        </h:column>
+                    </h:dataTable>
+
+                    <h:outputLabel value="Comentario" for="comentario" class="col-form-label"/>
+                    <h:inputTextarea id="comentario" value="#{reclamoUsuarioBean.reclamoDTO.comentario}" label="comentario" class="form-control" readonly="true"/>
+
+                    <h:outputLabel value="Respuesta" for="respuesta" class="col-form-label"/>
+                    <h:inputTextarea id="respuesta" value="#{reclamoUsuarioBean.reclamoDTO.comentarioRespuesta}" label="respuesta" class="form-control"/>
+
+                    <h:commandButton value="Guardar Cambios" action="#{reclamoUsuarioBean.actualizarReclamo}" class="btn btn-primary"/>
+                    <h:link value="Cancelar" outcome="reclamoadmin.xhtml" class="btn btn-primary"/>
+
+                </h:panelGrid>
+            </h:form>
+
+        </h:panelGrid>            
+        
+    </ui:define>
+
+</ui:composition>

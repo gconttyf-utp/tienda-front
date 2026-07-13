@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<ui:composition template="base.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:jsf="jakarta.faces.passthrough"
+                xmlns:ui="jakarta.faces.facelets">
+    
+    <ui:define name="content">
+        
+        <h:panelGrid border="1" class="table">
+            <f:facet name="header">
+                <h:outputText value="#{pedidoUsuarioBean.titulo} a Entregar" class="fs-5 fw-bold"/>
+            </f:facet>
+            
+            <h:outputText value="No existen tiendas en la base de datos!" rendered="#{empty pedidoUsuarioBean.listadoSeguimientoPendienteEntrega}"
+                          class="alert alert-warning text-center d-block"/>
+            
+            <h:dataTable var="p" value="#{pedidoUsuarioBean.listadoSeguimientoPendienteEntrega}" rendered="#{not empty pedidoUsuarioBean.listadoSeguimientoPendienteEntrega}" 
+                         class="table table-hover table-striped">
+                
+                <h:column>
+                    <f:facet name="header">
+                        <h:outputText value="Id Pedido"/>
+                    </f:facet>
+                    <h:outputText value="##{p.id}" />
+                </h:column>
+                
+                <h:column>
+                    <f:facet name="header">
+                        <h:outputText value="Nombre de Tienda"/>
+                    </f:facet>
+                    <h:outputText value="#{pedidoUsuarioBean.obtenerNombreTienda(p.tiendaID)}" />
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">
+                        <h:outputText value="Fecha Pedido"/>
+                    </f:facet>
+                    <h:outputText value="#{p.fechaCreacion}">
+                        <f:convertDateTime type="localDateTime" pattern="dd/MM/yyyy HH:mm" />
+                    </h:outputText>
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">
+                        <h:outputText value="Fecha Despacho"/>
+                    </f:facet>
+                    <h:outputText value="#{p.fechaDespacho}">
+                        <f:convertDateTime type="localDateTime" pattern="dd/MM/yyyy HH:mm" />
+                    </h:outputText>
+                </h:column>
+                
+                <h:column>
+                    <f:facet name="header">
+                        <h:outputText value="Total"/>
+                    </f:facet>
+                    <h:outputText value="S/ #{p.total}" />
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">
+                        <h:outputText value="Productos"/>
+                    </f:facet>
+                    <h:form id="formProductos">
+                        <h:commandLink value="#{pedidoUsuarioBean.pedidoId eq p.id ? 'Ocultar' : 'Ver Productos'}" 
+                                       action="#{pedidoUsuarioBean.toggleDetalle(p.id)}" 
+                                       class="btn btn-sm btn-info">
+                            <f:ajax render="@form" />
+                        </h:commandLink>
+                        
+                        <h:panelGroup rendered="#{pedidoUsuarioBean.pedidoId eq p.id}" layout="block" style="margin-top: 10px;">
+                            <h:dataTable value="#{p.detalles}" var="det" class="table table-sm table-bordered mb-0">
+                                <h:column>
+                                    <f:facet name="header">Producto</f:facet>
+                                    #{pedidoUsuarioBean.obtenerNombreProducto(det.productoID)}
+                                </h:column>
+                                <h:column>
+                                    <f:facet name="header">Cant.</f:facet>
+                                    #{det.cantidad}
+                                </h:column>
+                            </h:dataTable>
+                        </h:panelGroup>
+                    </h:form>
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">
+                        <h:outputText value="Estado"/>
+                    </f:facet>
+                    <h:outputText value="#{p.estado}" />
+                </h:column>
+                
+                <h:column>
+                    <f:facet name="header">
+                        <h:outputText value="Despacho"/>
+                    </f:facet>
+                    <h:form id="btnFormDespacho">
+                        <h:commandLink value="Entregado" action="#{pedidoUsuarioBean.enviarAEntregado(p.id)}" 
+                                       class="btn btn-sm btn-warning" 
+                                       rendered="#{p.estado eq 'PENDIENTE_ENTREGA'}"
+                                       onclick="return confirm('¿Está seguro de cambiar el estado a ENTREGADO?')"/>
+                        <h:outputText value="- - -" rendered="#{p.estado ne 'PENDIENTE_ENTREGA'}"/>
+                    </h:form>
+                </h:column>
+                
+            </h:dataTable>
+        </h:panelGrid>            
+        
+    </ui:define>
+
+</ui:composition>
