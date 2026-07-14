@@ -16,10 +16,9 @@
                 <span class="product-card__badge product-card__badge--soldout">AGOTADO</span>
             </ui:fragment>
             <ui:fragment rendered="#{not empty producto.rutaImg}">
-                <img src="resources/imagenes/productos/#{producto.rutaImg}"
-                     alt="#{producto.descripcion}"
-                     class="product-card__image"
-                     loading="lazy"/>
+                <h:graphicImage value="/media/productos/#{producto.rutaImg}" 
+                    class="product-card__image" 
+                    alt="#{producto.descripcion}" loading="lazy"/>
             </ui:fragment>
             <ui:fragment rendered="#{empty producto.rutaImg}">
                 <span class="product-card__placeholder">#{producto.sku}</span>
